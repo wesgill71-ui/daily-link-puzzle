@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Puzzle</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>Daily Puzzle</h1>
+      <p>Find the missing connection</p>
+    </header>
+
+    <div class="difficulty-row">
+      <button class="difficulty-btn active">Easy</button>
+      <button class="difficulty-btn">Medium</button>
+      <button class="difficulty-btn">Hard</button>
+    </div>
+
+    <main class="main">
+      <div id="puzzle-board" class="board"></div>
+
+      <input id="guess-input" class="guess-input" type="text" placeholder="Enter your guess..." />
+      <button id="submit-btn" class="submit-btn">Submit</button>
+
+      <div id="feedback" class="feedback">
+        <span class="feedback-title">Guesses</span>
+      </div>
+    </main>
+
+    <footer class="footer">
+      A daily word connection puzzle
+    </footer>
+  </div>
+
+  <script src="/static/main.js"></script>
+</body>
+</html>

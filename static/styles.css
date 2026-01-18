@@ -1,0 +1,120 @@
+:root {
+  --bg: #0f0f10;
+  --panel: #1a1a1c;
+  --panel-light: #222224;
+  --border: #2f2f33;
+  --text: #f2f2f2;
+  --muted: #b5b5b8;
+  --accent: #ffffff;
+}
+
+* { box-sizing: border-box; }
+
+/* Base */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #000;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* App container */
+.app {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Header */
+.header h1 {
+  font-size: 40px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.header p {
+  margin: 8px 0 24px;
+  color: #b3b3b3;
+}
+
+/* Difficulty buttons */
+.difficulty-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.difficulty-btn {
+  flex: 1;
+  padding: 18px;
+  background: #222;
+  border: 1px solid #444;
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.difficulty-btn.active {
+  border-color: #fff;
+}
+
+/* Puzzle board */
+.board {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.pair-card {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  padding: 18px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Input & submit */
+.guess-input {
+  width: 100%;
+  padding: 18px;
+  margin-bottom: 12px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+  font-size: 15px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 18px;
+  background: #222;
+  border: 1px solid #333;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Feedback */
+.feedback {
+  text-align: left;
+  margin-top: 10px;
+}
+
+.feedback-title {
+  font-size: 15px;
+}
+
+/* Footer */
+.footer {
+  margin-top: 30px;
+  color: #888;
+  font-size: 15px;
+}

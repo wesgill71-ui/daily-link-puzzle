@@ -1,0 +1,61 @@
+[
+  { "answer": "PROCESS", "pairs": [["Input","Output"],["Plan","Execute"],["Raw","Refined"],["Start","Finish"],["Cause","Effect"]] },
+  { "answer": "BALANCE", "pairs": [["Left","Right"],["Work","Life"],["Debit","Credit"],["Stability","Motion"],["Risk","Reward"]] },
+  { "answer": "GROWTH", "pairs": [["Seed","Plant"],["Child","Adult"],["Small","Large"],["Invest","Return"],["Learn","Improve"]] },
+  { "answer": "CHANGE", "pairs": [["Before","After"],["Old","New"],["Static","Dynamic"],["Adapt","Evolve"],["Same","Different"]] },
+  { "answer": "SYSTEM", "pairs": [["Parts","Whole"],["Input","Feedback"],["Order","Structure"],["Network","Node"],["Function","Purpose"]] },
+
+  { "answer": "PATTERN", "pairs": [["Repeat","Recognize"],["Shape","Sequence"],["Order","Predict"],["Trend","Data"],["Rhythm","Beat"]] },
+  { "answer": "CONTROL", "pairs": [["Power","Limit"],["Steer","Guide"],["Command","Response"],["Access","Restrict"],["Rule","Enforce"]] },
+  { "answer": "ENERGY", "pairs": [["Fuel","Motion"],["Power","Work"],["Heat","Light"],["Consume","Produce"],["Charge","Discharge"]] },
+  { "answer": "VALUE", "pairs": [["Cost","Worth"],["Price","Benefit"],["Quality","Utility"],["Trade","Gain"],["Need","Desire"]] },
+  { "answer": "FOCUS", "pairs": [["Attention","Clarity"],["Blur","Sharp"],["Aim","Target"],["Noise","Signal"],["Mind","Task"]] },
+
+  { "answer": "SPEED", "pairs": [["Fast","Slow"],["Race","Pace"],["Time","Distance"],["Quick","Delay"],["Velocity","Motion"]] },
+  { "answer": "MEMORY", "pairs": [["Recall","Forget"],["Store","Retrieve"],["Past","Present"],["Brain","Mind"],["Learn","Remember"]] },
+  { "answer": "RISK", "pairs": [["Chance","Loss"],["Safe","Danger"],["Bet","Outcome"],["Uncertain","Reward"],["Fear","Gain"]] },
+  { "answer": "TRUST", "pairs": [["Faith","Doubt"],["Rely","Believe"],["Honest","Deceive"],["Bond","Break"],["Confidence","Security"]] },
+  { "answer": "SKILL", "pairs": [["Practice","Mastery"],["Talent","Effort"],["Learn","Apply"],["Ability","Performance"],["Train","Improve"]] },
+
+  { "answer": "TIME", "pairs": [["Past","Future"],["Clock","Moment"],["Delay","Now"],["Wait","Act"],["Begin","End"]] },
+  { "answer": "GOAL", "pairs": [["Aim","Achieve"],["Plan","Target"],["Desire","Result"],["Set","Reach"],["Vision","Outcome"]] },
+  { "answer": "LOGIC", "pairs": [["Reason","Conclusion"],["True","False"],["If","Then"],["Think","Decide"],["Rule","Inference"]] },
+  { "answer": "ORDER", "pairs": [["Chaos","Structure"],["Arrange","Sort"],["First","Last"],["Sequence","Flow"],["Rank","Position"]] },
+  { "answer": "DESIGN", "pairs": [["Create","Plan"],["Form","Function"],["Sketch","Build"],["Idea","Product"],["Purpose","Shape"]] },
+
+  { "answer": "LEADER", "pairs": [["Guide","Follow"],["Vision","Direction"],["Inspire","Act"],["Command","Team"],["Lead","Support"]] },
+  { "answer": "TEAM", "pairs": [["Group","Goal"],["Alone","Together"],["Role","Cooperate"],["Win","Share"],["Support","Trust"]] },
+  { "answer": "CHOICE", "pairs": [["Option","Select"],["Decide","Commit"],["Yes","No"],["Free","Will"],["Path","Decision"]] },
+  { "answer": "RESULT", "pairs": [["Cause","Effect"],["Action","Outcome"],["Test","Score"],["Work","Payoff"],["Try","Achieve"]] },
+  { "answer": "IDEA", "pairs": [["Think","Create"],["Concept","Thought"],["Spark","Inspire"],["Mind","Imagination"],["Dream","Plan"]] },
+
+  { "answer": "POWER", "pairs": [["Energy","Force"],["Control","Influence"],["Strength","Ability"],["Authority","Command"],["Drive","Act"]] },
+  { "answer": "DATA", "pairs": [["Collect","Analyze"],["Facts","Info"],["Input","Output"],["Measure","Track"],["Numbers","Trends"]] },
+  { "answer": "TRUTH", "pairs": [["Fact","Fiction"],["Honest","Lie"],["Reveal","Hide"],["Proof","Claim"],["Reality","Belief"]] },
+  { "answer": "VISION", "pairs": [["See","Imagine"],["Future","Plan"],["Goal","Picture"],["Dream","Direction"],["Sight","Clarity"]] },
+  { "answer": "FLOW", "pairs": [["Move","Smooth"],["Block","Release"],["Stream","Current"],["Work","Ease"],["Start","Continue"]] },
+
+  { "answer": "STRESS", "pairs": [["Pressure","Strain"],["Calm","Anxiety"],["Work","Overload"],["Tense","Relax"],["Demand","Limit"]] },
+  { "answer": "HEALTH", "pairs": [["Body","Mind"],["Eat","Move"],["Sick","Well"],["Care","Recover"],["Balance","Fitness"]] },
+  { "answer": "LEARN", "pairs": [["Study","Understand"],["Teach","Absorb"],["Fail","Improve"],["Know","Grow"],["Practice","Skill"]] },
+  { "answer": "CREATE", "pairs": [["Make","Build"],["Idea","Form"],["Imagine","Produce"],["Design","Craft"],["Start","Invent"]] },
+  { "answer": "ADAPT", "pairs": [["Change","Survive"],["Adjust","Fit"],["Evolve","Respond"],["Learn","Modify"],["React","Improve"]] },
+
+  { "answer": "CLARITY", "pairs": [["Clear","Confused"],["Focus","Understand"],["Light","See"],["Truth","Reveal"],["Sharp","Blur"]] },
+  { "answer": "EFFORT", "pairs": [["Try","Persist"],["Work","Result"],["Push","Progress"],["Energy","Action"],["Strain","Achieve"]] },
+  { "answer": "MOTION", "pairs": [["Move","Travel"],["Speed","Direction"],["Force","Shift"],["Action","Flow"],["Rest","Move"]] },
+  { "answer": "SUCCESS", "pairs": [["Win","Achieve"],["Goal","Result"],["Try","Succeed"],["Effort","Reward"],["Plan","Victory"]] },
+  { "answer": "FAILURE", "pairs": [["Lose","Learn"],["Mistake","Lesson"],["Fall","Rise"],["Error","Fix"],["Try","Fail"]] },
+
+  { "answer": "COURAGE", "pairs": [["Fear","Face"],["Risk","Act"],["Brave","Bold"],["Stand","Speak"],["Strength","Heart"]] },
+  { "answer": "DISCIPLINE", "pairs": [["Routine","Habit"],["Control","Focus"],["Practice","Consistency"],["Rule","Follow"],["Train","Repeat"]] },
+  { "answer": "HABIT", "pairs": [["Repeat","Automatic"],["Routine","Daily"],["Practice","Pattern"],["Behavior","Cycle"],["Form","Maintain"]] },
+  { "answer": "INSIGHT", "pairs": [["Understand","See"],["Knowledge","Depth"],["Realize","Awareness"],["Clue","Meaning"],["Think","Discover"]] },
+  { "answer": "SIMPLICITY", "pairs": [["Complex","Simple"],["Less","More"],["Clear","Clean"],["Reduce","Refine"],["Focus","Essence"]] },
+
+  { "answer": "PATIENCE", "pairs": [["Wait","Calm"],["Rush","Slow"],["Time","Endure"],["Delay","Trust"],["Still","Steady"]] },
+  { "answer": "CONFIDENCE", "pairs": [["Believe","Act"],["Doubt","Trust"],["Sure","Bold"],["Stand","Firm"],["Self","Assured"]] },
+  { "answer": "PURPOSE", "pairs": [["Why","Reason"],["Goal","Meaning"],["Intent","Direction"],["Use","Function"],["Aim","Mission"]] },
+  { "answer": "STRATEGY", "pairs": [["Plan","Win"],["Think","Act"],["Long","Short"],["Move","Counter"],["Goal","Path"]] },
+  { "answer": "WISDOM", "pairs": [["Know","Apply"],["Age","Insight"],["Learn","Judge"],["Experience","Guide"],["Think","Choose"]] }
+]

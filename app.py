@@ -89,6 +89,7 @@ def guess():
         status = "correct"
         advance = True
         session["solved"] = True
+        reveal_answer = puzzle["answer"]  # <--- THIS IS THE FIX (Reveal on win)
     elif guess_text in synonyms:
         status = "close"
     elif guess_norm == answer_norm:
@@ -113,11 +114,6 @@ def guess():
     current_history = session.get("history", [])
     current_history.append(history_entry)
     session["history"] = current_history
-
-    # Reset count if they win/lose so next day starts fresh logic handles it
-    if advance:
-        # We don't reset immediately here so the user can see the result
-        pass
 
     return jsonify({
         "status": status,

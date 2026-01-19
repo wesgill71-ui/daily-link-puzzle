@@ -27,10 +27,9 @@ async function loadPuzzle() {
         addFeedbackRow(item.guess, item.status, item.answer);
     });
 
-    // 4. Render Board
     renderBoard();
 
-    // 5. Handle Solved/Game Over State
+    // 4. Handle Solved/Game Over State
     if (solved || (guessCount >= puzzleData.max_guesses && !solved)) {
         disableInput();
     } else {
@@ -68,7 +67,7 @@ function addFeedbackRow(guessWord, status, answer) {
         row.innerText = `🟩 ${guessWord} — Correct!`;
         row.style.color = "green";
     } else if (status === "fail") {
-        row.innerText = `❌ Out of guesses — Answer: ${answer}`;
+        row.innerText = `❌ Out of guesses`; 
         row.style.color = "red";
     } else if (status === "close") {
         row.innerText = `🟨 ${guessWord} — Close`;
@@ -79,6 +78,19 @@ function addFeedbackRow(guessWord, status, answer) {
     }
 
     feedback.appendChild(row);
+}
+
+// --- NEW: Helper to show the popup ---
+function showModal(title, message) {
+    const modal = document.getElementById("game-modal");
+    document.getElementById("modal-title").innerText = title;
+    document.getElementById("modal-message").innerText = message;
+    
+    modal.classList.remove("hidden");
+    // Small timeout to allow CSS transition
+    setTimeout(() => {
+        modal.classList.add("show");
+    }, 10);
 }
 
 function disableInput() {
@@ -93,7 +105,6 @@ async function submitGuess() {
     const guess = input.value.trim();
     if (!guess) return;
 
-    // Send to backend
     const res = await fetch("/guess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -101,23 +112,24 @@ async function submitGuess() {
     });
 
     const data = await res.json();
-    guessCount++; // Update local count
+    guessCount++;
 
-    // Add the new row immediately
     addFeedbackRow(guess, data.status, data.answer);
 
     if (data.advance) {
-        // Game Over (Win or Lose)
+        disableInput();
+        
         if (data.status === "correct") {
             solved = true;
-            renderBoard(); // Update board to show green
-            disableInput();
+            renderBoard(); // Show green board
+            
+            // Show Success Modal
+            showModal("Congratulations!", `The answer was ${data.answer || "Correct"}.`);
         } else {
-            // Fail
-            disableInput();
+            // Show Fail Modal
+            showModal("Game Over", `The answer was ${data.answer}. Try again tomorrow!`);
         }
     } else {
-        // Wrong/Close -> Reveal next card
         if (revealedCount < puzzleData.pairs.length) {
             revealedCount++;
             renderBoard();
@@ -128,7 +140,15 @@ async function submitGuess() {
     if (!solved) input.focus();
 }
 
-// Event Listeners
+// --- NEW: Close Modal Event ---
+document.getElementById("close-modal-btn").addEventListener("click", () => {
+    const modal = document.getElementById("game-modal");
+    modal.classList.remove("show");
+    setTimeout(() => {
+        modal.classList.add("hidden");
+    }, 300); 
+});
+
 document.getElementById("submit-btn").addEventListener("click", submitGuess);
 document.getElementById("guess-input").addEventListener("keydown", (e) => {
     if (e.key === "Enter") submitGuess();

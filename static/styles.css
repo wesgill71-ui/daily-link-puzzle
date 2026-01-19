@@ -118,3 +118,73 @@ body {
   color: #888;
   font-size: 15px;
 }
+
+
+/* --- Modal Styles --- */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Class to show the modal */
+.modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  background: #1a1a1c;
+  border: 1px solid #333;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 90%;
+  width: 320px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.modal.show .modal-content {
+  transform: translateY(0);
+}
+
+.modal h2 {
+  margin-top: 0;
+  color: #fff;
+  font-size: 24px;
+}
+
+.modal p {
+  color: #b5b5b8;
+  font-size: 16px;
+  margin: 15px 0 25px;
+  line-height: 1.5;
+}
+
+#close-modal-btn {
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 12px 24px;
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+}
+
+#close-modal-btn:hover {
+  opacity: 0.9;
+}

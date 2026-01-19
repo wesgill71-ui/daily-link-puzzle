@@ -1,16 +1,4 @@
 [
-  { "answer": "PROCESS", "pairs": [["Input","Output"],["Plan","Execute"],["Raw","Refined"],["Start","Finish"],["Cause","Effect"]] },
-  { "answer": "BALANCE", "pairs": [["Left","Right"],["Work","Life"],["Debit","Credit"],["Stability","Motion"],["Risk","Reward"]] },
-  { "answer": "GROWTH", "pairs": [["Seed","Plant"],["Child","Adult"],["Small","Large"],["Invest","Return"],["Learn","Improve"]] },
-  { "answer": "CHANGE", "pairs": [["Before","After"],["Old","New"],["Static","Dynamic"],["Adapt","Evolve"],["Same","Different"]] },
-  { "answer": "SYSTEM", "pairs": [["Parts","Whole"],["Input","Feedback"],["Order","Structure"],["Network","Node"],["Function","Purpose"]] },
-
-  { "answer": "PATTERN", "pairs": [["Repeat","Recognize"],["Shape","Sequence"],["Order","Predict"],["Trend","Data"],["Rhythm","Beat"]] },
-  { "answer": "CONTROL", "pairs": [["Power","Limit"],["Steer","Guide"],["Command","Response"],["Access","Restrict"],["Rule","Enforce"]] },
-  { "answer": "ENERGY", "pairs": [["Fuel","Motion"],["Power","Work"],["Heat","Light"],["Consume","Produce"],["Charge","Discharge"]] },
-  { "answer": "VALUE", "pairs": [["Cost","Worth"],["Price","Benefit"],["Quality","Utility"],["Trade","Gain"],["Need","Desire"]] },
-  { "answer": "FOCUS", "pairs": [["Attention","Clarity"],["Blur","Sharp"],["Aim","Target"],["Noise","Signal"],["Mind","Task"]] },
-
   { "answer": "SPEED", "pairs": [["Fast","Slow"],["Race","Pace"],["Time","Distance"],["Quick","Delay"],["Velocity","Motion"]] },
   { "answer": "MEMORY", "pairs": [["Recall","Forget"],["Store","Retrieve"],["Past","Present"],["Brain","Mind"],["Learn","Remember"]] },
   { "answer": "RISK", "pairs": [["Chance","Loss"],["Safe","Danger"],["Bet","Outcome"],["Uncertain","Reward"],["Fear","Gain"]] },
@@ -57,5 +45,17 @@
   { "answer": "CONFIDENCE", "pairs": [["Believe","Act"],["Doubt","Trust"],["Sure","Bold"],["Stand","Firm"],["Self","Assured"]] },
   { "answer": "PURPOSE", "pairs": [["Why","Reason"],["Goal","Meaning"],["Intent","Direction"],["Use","Function"],["Aim","Mission"]] },
   { "answer": "STRATEGY", "pairs": [["Plan","Win"],["Think","Act"],["Long","Short"],["Move","Counter"],["Goal","Path"]] },
-  { "answer": "WISDOM", "pairs": [["Know","Apply"],["Age","Insight"],["Learn","Judge"],["Experience","Guide"],["Think","Choose"]] }
+  { "answer": "WISDOM", "pairs": [["Know","Apply"],["Age","Insight"],["Learn","Judge"],["Experience","Guide"],["Think","Choose"]] },
+
+  { "answer": "PROCESS", "pairs": [["Input","Output"],["Plan","Execute"],["Raw","Refined"],["Start","Finish"],["Cause","Effect"]] },
+  { "answer": "BALANCE", "pairs": [["Left","Right"],["Work","Life"],["Debit","Credit"],["Stability","Motion"],["Risk","Reward"]] },
+  { "answer": "GROWTH", "pairs": [["Seed","Plant"],["Child","Adult"],["Small","Large"],["Invest","Return"],["Learn","Improve"]] },
+  { "answer": "CHANGE", "pairs": [["Before","After"],["Old","New"],["Static","Dynamic"],["Adapt","Evolve"],["Same","Different"]] },
+  { "answer": "SYSTEM", "pairs": [["Parts","Whole"],["Input","Feedback"],["Order","Structure"],["Network","Node"],["Function","Purpose"]] },
+
+  { "answer": "PATTERN", "pairs": [["Repeat","Recognize"],["Shape","Sequence"],["Order","Predict"],["Trend","Data"],["Rhythm","Beat"]] },
+  { "answer": "CONTROL", "pairs": [["Power","Limit"],["Steer","Guide"],["Command","Response"],["Access","Restrict"],["Rule","Enforce"]] },
+  { "answer": "ENERGY", "pairs": [["Fuel","Motion"],["Power","Work"],["Heat","Light"],["Consume","Produce"],["Charge","Discharge"]] },
+  { "answer": "VALUE", "pairs": [["Cost","Worth"],["Price","Benefit"],["Quality","Utility"],["Trade","Gain"],["Need","Desire"]] },
+  { "answer": "FOCUS", "pairs": [["Attention","Clarity"],["Blur","Sharp"],["Aim","Target"],["Noise","Signal"],["Mind","Task"]] }
 ]

@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, request, session
 import json
 import datetime as datetime
 
-START_DATE = datetime.datetime(2026,1,18)
+START_DATE = datetime.datetime(2026,1,19)
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-key"  # required for sessions

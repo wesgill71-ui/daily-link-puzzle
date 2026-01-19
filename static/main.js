@@ -111,7 +111,7 @@ function handleShare(btnElement) {
     const maxGuesses = puzzleData.max_guesses;
 
     // Build the Emoji Grid
-    let text = `The Missing Link #${dayIndex} ${currentGuessCount}/${maxGuesses}\n\n`;
+    let text = `The Daily Link Puzzle #${dayIndex} ${currentGuessCount}/${maxGuesses}\n\n`;
 
     history.forEach(item => {
         if (item.status === "correct") text += "🟩\n";

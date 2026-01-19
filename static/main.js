@@ -10,7 +10,9 @@ async function loadPuzzle() {
     // 1. Sync basic state
     guessCount = puzzleData.current_guesses || 0;
     solved = puzzleData.solved || false;
-    const history = puzzleData.history || [];
+    
+    // Ensure history exists
+    if (!puzzleData.history) puzzleData.history = [];
 
     // 2. Set board reveal level
     revealedCount = guessCount + 1;
@@ -23,7 +25,7 @@ async function loadPuzzle() {
     feedback.innerHTML = "";
     
     // Replay history
-    history.forEach(item => {
+    puzzleData.history.forEach(item => {
         addFeedbackRow(item.guess, item.status, item.answer);
     });
 
@@ -102,6 +104,7 @@ function disableInput() {
 
 // --- SHARED COPY LOGIC ---
 function handleShare(btnElement) {
+    // Use the global 'puzzleData' which we are now keeping updated
     const history = puzzleData.history || [];
     const dayIndex = puzzleData.day_index || 1;
     const currentGuessCount = solved ? history.length : "X";
@@ -148,6 +151,15 @@ async function submitGuess() {
 
     const data = await res.json();
     guessCount++;
+
+    // --- FIX: UPDATE THE DATA IMMEDIATELY ---
+    if (!puzzleData.history) puzzleData.history = [];
+    puzzleData.history.push({
+        guess: guess,
+        status: data.status,
+        answer: data.answer
+    });
+    // ----------------------------------------
 
     addFeedbackRow(guess, data.status, data.answer);
 

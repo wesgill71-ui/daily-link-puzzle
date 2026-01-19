@@ -5,6 +5,7 @@ from datetime import datetime, date
 START_DATE = date(2026,1,19)
 
 app = Flask(__name__)
+applications = app
 app.secret_key = "dev-secret-key"  # required for sessions
 
 MAX_GUESSES = 6

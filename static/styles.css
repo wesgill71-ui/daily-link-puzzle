@@ -10,7 +10,6 @@
 
 * { box-sizing: border-box; }
 
-/* Base */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -22,7 +21,6 @@ body {
   height: 100vh;
 }
 
-/* App container */
 .app {
   width: 100%;
   max-width: 600px;
@@ -30,7 +28,6 @@ body {
   text-align: center;
 }
 
-/* Header */
 .header h1 {
   font-size: 40px;
   margin: 0;
@@ -42,7 +39,6 @@ body {
   color: #b3b3b3;
 }
 
-/* Difficulty buttons */
 .difficulty-row {
   display: flex;
   justify-content: space-between;
@@ -65,7 +61,6 @@ body {
   border-color: #fff;
 }
 
-/* Puzzle board */
 .board {
   display: grid;
   gap: 14px;
@@ -80,7 +75,6 @@ body {
   font-weight: 600;
 }
 
-/* Input & submit */
 .guess-input {
   width: 100%;
   padding: 18px;
@@ -102,25 +96,34 @@ body {
   cursor: pointer;
 }
 
-/* Feedback */
 .feedback {
   text-align: left;
   margin-top: 10px;
 }
 
-.feedback-title {
-  font-size: 15px;
+.feedback div {
+    padding: 10px 14px;
+    background: #151516;
+    border: 1px solid #333;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
 }
 
-/* Footer */
+.feedback-title {
+  font-size: 15px;
+  display: block;
+  margin-bottom: 10px;
+}
+
 .footer {
   margin-top: 30px;
   color: #888;
   font-size: 15px;
 }
 
-
-/* --- Modal Styles --- */
+/* MODAL STYLES */
 .modal {
   position: fixed;
   top: 0;
@@ -137,7 +140,6 @@ body {
   transition: opacity 0.3s ease;
 }
 
-/* Class to show the modal */
 .modal.show {
   opacity: 1;
   pointer-events: auto;
@@ -173,18 +175,49 @@ body {
   line-height: 1.5;
 }
 
-#close-modal-btn {
-  background: #fff;
+/* SHARE BUTTONS */
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.share-btn {
+  background: #4ade80; /* Green */
   color: #000;
   border: none;
-  padding: 12px 24px;
-  font-weight: bold;
+  padding: 14px;
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  transition: transform 0.1s;
+}
+
+.share-btn:active {
+  transform: scale(0.98);
+}
+
+.secondary-btn {
+  background: transparent;
+  color: #888;
+  border: 1px solid #333;
+  padding: 12px;
+  font-weight: 600;
   font-size: 14px;
   border-radius: 6px;
   cursor: pointer;
   width: 100%;
 }
 
-#close-modal-btn:hover {
-  opacity: 0.9;
+.secondary-btn:hover {
+  border-color: #666;
+  color: #fff;
+}
+
+/* UTILITY */
+.hidden {
+  display: none !important;
 }

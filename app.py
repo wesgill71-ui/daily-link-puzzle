@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, request, session
 import json
 import datetime as datetime
 
-START_DATE = datetime.datetime(2026,1,18)
+START_DATE = datetime.datetime(2026,1,19)
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-key"  # required for sessions
@@ -37,15 +37,16 @@ def get_puzzle():
     if session.get("daily_index") != idx:
         session["daily_index"] = idx
         session["guess_count"] = 0
-        session["history"] = []         # <--- Initialize history list
-        session["solved"] = False       # <--- Track if they won
+        session["history"] = []
+        session["solved"] = False
 
     return jsonify({
         "pairs": puzzle["pairs"],
         "max_guesses": MAX_GUESSES,
         "current_guesses": session.get("guess_count", 0),
-        "history": session.get("history", []),  # <--- Send history to frontend
-        "solved": session.get("solved", False)
+        "history": session.get("history", []),
+        "solved": session.get("solved", False),
+        "day_index": idx + 1  # <--- ADD THIS LINE (Puzzle #1, #2, etc.)
     })
 
 @app.route("/guess", methods=["POST"])

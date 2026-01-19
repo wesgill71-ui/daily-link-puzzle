@@ -32,6 +32,9 @@ async function loadPuzzle() {
     // 4. Handle Solved/Game Over State
     if (solved || (guessCount >= puzzleData.max_guesses && !solved)) {
         disableInput();
+        // Show persistent button if it exists
+        const pBtn = document.getElementById("persistent-share-btn");
+        if (pBtn) pBtn.classList.remove("hidden");
     } else {
         document.getElementById("submit-btn").disabled = false;
         document.getElementById("guess-input").focus();
@@ -80,7 +83,6 @@ function addFeedbackRow(guessWord, status, answer) {
     feedback.appendChild(row);
 }
 
-// --- NEW: Helper to show the popup ---
 function showModal(title, message) {
     const modal = document.getElementById("game-modal");
     document.getElementById("modal-title").innerText = title;
@@ -96,6 +98,39 @@ function showModal(title, message) {
 function disableInput() {
     document.getElementById("submit-btn").disabled = true;
     document.getElementById("guess-input").disabled = true;
+}
+
+// --- SHARED COPY LOGIC ---
+function handleShare(btnElement) {
+    const history = puzzleData.history || [];
+    const dayIndex = puzzleData.day_index || 1;
+    const currentGuessCount = solved ? history.length : "X";
+    const maxGuesses = puzzleData.max_guesses;
+
+    // Build the Emoji Grid
+    let text = `The Missing Link #${dayIndex} ${currentGuessCount}/${maxGuesses}\n\n`;
+
+    history.forEach(item => {
+        if (item.status === "correct") text += "🟩\n";
+        else if (item.status === "close") text += "🟨\n";
+        else text += "⬜\n";
+    });
+
+    // Copy to Clipboard
+    navigator.clipboard.writeText(text).then(() => {
+        const originalText = btnElement.innerText;
+        
+        btnElement.innerText = "Copied!";
+        btnElement.style.background = "#fff"; // Flash white
+        
+        setTimeout(() => {
+            btnElement.innerText = originalText;
+            btnElement.style.background = "#4ade80"; // Restore green
+        }, 2000);
+    }).catch(err => {
+        console.error("Failed to copy:", err);
+        alert("Could not copy to clipboard.");
+    });
 }
 
 async function submitGuess() {
@@ -119,11 +154,13 @@ async function submitGuess() {
     if (data.advance) {
         disableInput();
         
+        // Show persistent share button (Safety Checked)
+        const pBtn = document.getElementById("persistent-share-btn");
+        if (pBtn) pBtn.classList.remove("hidden");
+
         if (data.status === "correct") {
             solved = true;
             renderBoard(); // Show green board
-            
-            // Show Success Modal
             showModal("Congratulations!", `The answer was ${data.answer || "Correct"}.`);
         } else {
             // Show Fail Modal
@@ -140,7 +177,7 @@ async function submitGuess() {
     if (!solved) input.focus();
 }
 
-// --- NEW: Close Modal Event ---
+// --- EVENT LISTENERS ---
 document.getElementById("close-modal-btn").addEventListener("click", () => {
     const modal = document.getElementById("game-modal");
     modal.classList.remove("show");
@@ -153,5 +190,16 @@ document.getElementById("submit-btn").addEventListener("click", submitGuess);
 document.getElementById("guess-input").addEventListener("keydown", (e) => {
     if (e.key === "Enter") submitGuess();
 });
+
+// Hook up BOTH share buttons (with safety checks)
+const modalShareBtn = document.getElementById("share-btn");
+if (modalShareBtn) {
+    modalShareBtn.addEventListener("click", (e) => handleShare(e.target));
+}
+
+const persistentShareBtn = document.getElementById("persistent-share-btn");
+if (persistentShareBtn) {
+    persistentShareBtn.addEventListener("click", (e) => handleShare(e.target));
+}
 
 window.onload = loadPuzzle;

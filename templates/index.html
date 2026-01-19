@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daily Puzzle</title>
+  <title>The Missing Link</title>
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
   <div class="app">
     <header class="header">
-      <h1>Daily Puzzle</h1>
+      <h1>The Missing Link</h1>
       <p>Find the missing connection</p>
     </header>
 
@@ -28,6 +28,8 @@
       <div id="feedback" class="feedback">
         <span class="feedback-title">Guesses</span>
       </div>
+
+      <button id="persistent-share-btn" class="share-btn hidden" style="margin-top: 20px;">Share Result</button>
     </main>
 
     <footer class="footer">
@@ -39,7 +41,12 @@
     <div class="modal-content">
       <h2 id="modal-title"></h2>
       <p id="modal-message"></p>
-      <button id="close-modal-btn">Close</button>
+      
+      <div class="modal-actions">
+        <button id="share-btn" class="share-btn">Share Result</button>
+        <button id="close-modal-btn" class="secondary-btn">Close</button>
+      </div>
+      
     </div>
   </div>
 

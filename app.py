@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, request, session
 import json
 from datetime import datetime, date
 
-START_DATE = date(2026,1,19)
+START_DATE = date(2026,1,17)
 
 app = Flask(__name__)
 
@@ -124,4 +124,4 @@ def guess():
     })
 
 if __name__ == "__main__":
-    app.run(debug=True, extra_files=['static/styles.css'])
+    app.run(debug=True, extra_files=['static/styles.css'], port = 5001)

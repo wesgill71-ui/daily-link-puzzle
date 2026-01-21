@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, request, session
 import json
 from datetime import datetime, date, time
 
-START_DATE = datetime.combine(date(2026,1,17), time.min)
+START_DATE = datetime.combine(date(2026,1,16), time.min)
 
 app = Flask(__name__)
 

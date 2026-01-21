@@ -1,8 +1,8 @@
 from flask import Flask, render_template, jsonify, request, session
 import json
-from datetime import datetime, date
+from datetime import datetime, date, time
 
-START_DATE = date(2026,1,17)
+START_DATE = datetime.combine(date(2026,1,17), time.min)
 
 app = Flask(__name__)
 
@@ -15,7 +15,7 @@ def load_puzzles():
         return json.load(f)
 
 def get_daily_index():
-    today = date.today()
+    today = datetime.combine(date.today(), time.min)
     days_since_start = (today - START_DATE).days
     
     if days_since_start < 0:

@@ -1,55 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Daily Link Puzzle</title>
-  <link rel="stylesheet" href="/static/styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Daily Link Puzzle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <div class="app">
-    <header class="header">
-      <h1>The Daily Link Puzzle</h1>
-      <p>Find the missing connection</p>
-    </header>
+    <div class="app">
+        <header class="header">
+            <h1>The Daily Link Puzzle</h1>
+            <p>Find the missing connection</p>
+        </header>
 
-    <div class="difficulty-row">
-      <button class="difficulty-btn active">Easy</button>
-      <button class="difficulty-btn">Medium</button>
-      <button class="difficulty-btn">Hard</button>
+        <main class="main">
+            <div id="puzzle-board" class="board">
+                </div>
+
+            <div class="input-container">
+                <input id="guess-input" class="guess-input" type="text" placeholder="Enter your guess..." autocomplete="off" />
+                <button id="submit-btn" class="submit-btn">Submit</button>
+            </div>
+
+            <div id="feedback" class="feedback">
+                <span class="feedback-title">Guesses</span>
+                <div id="guess-list"></div>
+            </div>
+
+            <button id="persistent-share-btn" class="share-btn hidden">Share Result</button>
+        </main>
+
+        <footer class="footer">
+            A daily word connection puzzle
+        </footer>
     </div>
 
-    <main class="main">
-      <div id="puzzle-board" class="board"></div>
-
-      <input id="guess-input" class="guess-input" type="text" placeholder="Enter your guess..." />
-      <button id="submit-btn" class="submit-btn">Submit</button>
-
-      <div id="feedback" class="feedback">
-        <span class="feedback-title">Guesses</span>
-      </div>
-
-      <button id="persistent-share-btn" class="share-btn hidden" style="margin-top: 20px;">Share Result</button>
-    </main>
-
-    <footer class="footer">
-      A daily word connection puzzle
-    </footer>
-  </div>
-
-  <div id="game-modal" class="modal hidden">
-    <div class="modal-content">
-      <h2 id="modal-title"></h2>
-      <p id="modal-message"></p>
-      
-      <div class="modal-actions">
-        <button id="share-btn" class="share-btn">Share Result</button>
-        <button id="close-modal-btn" class="secondary-btn">Close</button>
-      </div>
-      
+    <div id="game-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title"></h2>
+            <p id="modal-message"></p>
+            <div class="modal-actions">
+                <button id="share-btn" class="share-btn">Share Result</button>
+                <button id="close-modal-btn" class="secondary-btn">Close</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script src="/static/main.js"></script>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

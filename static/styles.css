@@ -1,3 +1,4 @@
+/* Dark Theme Variables */
 :root {
   --bg: #0f0f10;
   --panel: #1a1a1c;
@@ -17,94 +18,92 @@ body {
   color: #fff;
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .app {
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
   padding: 20px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Responsive Header */
 .header h1 {
-  font-size: 40px;
+  font-size: clamp(1.6rem, 7vw, 2.5rem); 
   margin: 0;
   font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
 }
 
 .header p {
   margin: 8px 0 24px;
-  color: #b3b3b3;
+  color: var(--muted);
 }
 
-.difficulty-row {
+/* Board & Centered Hint Cards */
+.board {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 12px;
   margin-bottom: 18px;
 }
 
-.difficulty-btn {
-  flex: 1;
-  padding: 18px;
-  background: #222;
-  border: 1px solid #444;
-  color: #fff;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.difficulty-btn.active {
-  border-color: #fff;
-}
-
-.board {
-  display: grid;
-  gap: 14px;
-  margin-bottom: 18px;
-}
-
 .pair-card {
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: var(--panel);
+  border: 1px solid var(--border);
   padding: 18px;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 600;
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center;     /* Centers vertically */
+  gap: 15px;               /* Space for the 🔗 emoji */
+  border-radius: 8px;
+  width: 100%;
 }
 
+.link-emoji {
+  font-size: 1.2rem;
+}
+
+/* Input Area */
 .guess-input {
   width: 100%;
   padding: 18px;
   margin-bottom: 12px;
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: var(--panel);
+  border: 1px solid var(--border);
   color: #fff;
-  font-size: 15px;
+  font-size: 16px; /* Prevents auto-zoom on iPhone */
+  border-radius: 8px;
 }
 
 .submit-btn {
   width: 100%;
   padding: 18px;
-  background: #222;
-  border: 1px solid #333;
+  background: var(--panel-light);
+  border: 1px solid var(--border);
   color: #fff;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  border-radius: 8px;
 }
 
+/* Feedback History */
 .feedback {
   text-align: left;
   margin-top: 10px;
 }
 
-.feedback div {
+#guess-list div {
     padding: 10px 14px;
     background: #151516;
-    border: 1px solid #333;
+    border: 1px solid var(--border);
     border-radius: 6px;
     margin-bottom: 8px;
     font-size: 14px;
@@ -115,76 +114,42 @@ body {
   font-size: 15px;
   display: block;
   margin-bottom: 10px;
+  color: var(--muted);
 }
 
 .footer {
-  margin-top: 30px;
+  margin-top: auto;
+  padding: 20px 0;
   color: #888;
   font-size: 15px;
 }
 
-/* MODAL STYLES */
+/* Modal Styling */
 .modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: rgba(0, 0, 0, 0.85);
-  display: flex;
+  display: none; /* Controlled by .show class in JS */
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
 }
 
-.modal.show {
-  opacity: 1;
-  pointer-events: auto;
-}
+.modal.show { display: flex; }
 
 .modal-content {
-  background: #1a1a1c;
-  border: 1px solid #333;
+  background: var(--panel);
+  border: 1px solid var(--border);
   padding: 30px;
   border-radius: 12px;
   text-align: center;
   max-width: 90%;
   width: 320px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  transform: translateY(20px);
-  transition: transform 0.3s ease;
-}
-
-.modal.show .modal-content {
-  transform: translateY(0);
-}
-
-.modal h2 {
-  margin-top: 0;
-  color: #fff;
-  font-size: 24px;
-}
-
-.modal p {
-  color: #b5b5b8;
-  font-size: 16px;
-  margin: 15px 0 25px;
-  line-height: 1.5;
-}
-
-/* SHARE BUTTONS */
-.modal-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
 }
 
 .share-btn {
-  background: #4ade80; /* Green */
+  background: #4ade80;
   color: #000;
   border: none;
   padding: 14px;
@@ -193,31 +158,18 @@ body {
   border-radius: 6px;
   cursor: pointer;
   width: 100%;
-  transition: transform 0.1s;
-}
-
-.share-btn:active {
-  transform: scale(0.98);
 }
 
 .secondary-btn {
   background: transparent;
   color: #888;
-  border: 1px solid #333;
+  border: 1px solid var(--border);
   padding: 12px;
-  font-weight: 600;
   font-size: 14px;
   border-radius: 6px;
   cursor: pointer;
   width: 100%;
+  margin-top: 10px;
 }
 
-.secondary-btn:hover {
-  border-color: #666;
-  color: #fff;
-}
-
-/* UTILITY */
-.hidden {
-  display: none !important;
-}
+.hidden { display: none !important; }

@@ -9,13 +9,16 @@
 <body>
     <div class="app">
         <header class="header">
+            <div class="header-top-row">
+                <button id="help-btn" class="icon-btn">?</button>
+            </div>
+            
             <h1>The Daily Link Puzzle</h1>
             <p>Find the missing connection</p>
         </header>
 
         <main class="main">
-            <div id="puzzle-board" class="board">
-                </div>
+            <div id="puzzle-board" class="board"></div>
 
             <div class="input-container">
                 <input id="guess-input" class="guess-input" type="text" placeholder="Enter your guess..." autocomplete="off" />
@@ -43,6 +46,45 @@
                 <button id="share-btn" class="share-btn">Share Result</button>
                 <button id="close-modal-btn" class="secondary-btn">Close</button>
             </div>
+        </div>
+    </div>
+
+    <div id="instructions-modal" class="modal">
+        <div class="modal-content">
+            <h2>How to Play</h2>
+            <div class="instructions-body">
+                <p>Find the single word that links each pair together.</p>
+                <p class="highlight-text">The same word works for each hint!</p>
+                
+                <div class="legend-box">
+                    <div class="legend-row">
+                        <span class="color-box green"></span>
+                        <span><strong>Green:</strong> Correct Answer</span>
+                    </div>
+                    <div class="legend-row">
+                        <span class="color-box orange"></span>
+                        <span><strong>Orange:</strong> Close (Synonym/Tense)</span>
+                    </div>
+                    <div class="legend-row">
+                        <span class="color-box white"></span>
+                        <span><strong>White:</strong> Wrong Answer</span>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <div class="pair-card" style="margin-bottom: 5px;">
+                        <span>Repeat</span> <span class="link-emoji">🔗</span> <span>Recognize</span>
+                    </div>
+                    <p class="example-text">Answer: <strong>PATTERN</strong></p>
+                    <p class="hint-text">Patterns repeat and patterns are recognizable.</p>
+                </div>
+
+                <ul class="instructions-list">
+                    <li>One more hint reveals after every guess.</li>
+                    <li>Puzzles reset daily at midnight.</li>
+                </ul>
+            </div>
+            <button id="close-instructions-btn" class="share-btn" style="background: #fff; color: #000;">Got it!</button>
         </div>
     </div>
 

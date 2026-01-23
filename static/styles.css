@@ -97,9 +97,9 @@ body {
   width: 100%;
 }
 
-/* 3. NEW CLASS FOR THE LOGO IMAGE */
+/* Logo Image Styling - REVERTED TO SMALLER SIZE */
 .link-icon {
-    width: 24px;   /* Adjust size as needed */
+    width: 24px;
     height: 24px;
     object-fit: contain;
     vertical-align: middle;
@@ -176,11 +176,11 @@ body {
 
 .support-link {
     display: inline-block;
-    color: var(--green);
+    color: #0070ba; /* PayPal Blue */
     text-decoration: none;
     font-size: 14px;
     font-weight: bold;
-    border: 1px solid var(--green);
+    border: 1px solid #0070ba;
     padding: 8px 16px;
     border-radius: 20px;
     transition: all 0.2s ease;
@@ -188,8 +188,8 @@ body {
 }
 
 .support-link:hover {
-    background-color: var(--green);
-    color: #000;
+    background-color: #0070ba;
+    color: #fff;
 }
 
 /* Modal Styling */

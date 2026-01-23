@@ -46,7 +46,6 @@ function checkFirstVisit() {
     }
 }
 
-// --- 4. UPDATED RENDER FUNCTION TO USE IMG TAG ---
 function renderBoard() {
     const board = document.getElementById("puzzle-board");
     board.innerHTML = "";
@@ -55,16 +54,13 @@ function renderBoard() {
         const card = document.createElement("div");
         card.classList.add("pair-card");
 
-        // The image src points to your static folder
         const linkIcon = `<img src="/static/logo.png" class="link-icon" alt="link">`;
 
         if (solved || i < revealedCount) {
-            // Revealed: Word LOGO Word
             card.innerHTML = `<span>${pair[0]}</span> ${linkIcon} <span>${pair[1]}</span>`;
             if (solved) card.classList.add("pair-solved");
             else card.classList.add("pair-revealed");
         } else {
-            // Hidden: ? LOGO ?
             card.innerHTML = `<span>?</span> ${linkIcon} <span>?</span>`;
             card.classList.add("pair-hidden");
         }
@@ -119,7 +115,10 @@ function showHint() {
     document.getElementById("modal-title").innerText = "Hint";
     document.getElementById("modal-message").innerText = hintText;
     
+    // Hide BOTH buttons for hints
     document.getElementById("share-btn").classList.add("hidden");
+    const supportBtn = document.getElementById("modal-support-btn");
+    if(supportBtn) supportBtn.classList.add("hidden");
     
     modal.classList.remove("hidden");
     setTimeout(() => modal.classList.add("show"), 10);
@@ -131,10 +130,16 @@ function showModal(title, message, showShare = true) {
     document.getElementById("modal-message").innerText = message;
     
     const shareBtn = document.getElementById("share-btn");
+    const supportBtn = document.getElementById("modal-support-btn");
+
     if (showShare) {
         shareBtn.classList.remove("hidden");
+        // Show donate button on Game Over / Win
+        if(supportBtn) supportBtn.classList.remove("hidden");
     } else {
         shareBtn.classList.add("hidden");
+        // Hide donate button if not sharing (shouldn't happen here often, but good for safety)
+        if(supportBtn) supportBtn.classList.add("hidden");
     }
     
     modal.classList.remove("hidden");

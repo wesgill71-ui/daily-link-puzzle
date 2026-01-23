@@ -97,7 +97,6 @@ body {
   width: 100%;
 }
 
-/* Logo Image Styling - REVERTED TO SMALLER SIZE */
 .link-icon {
     width: 24px;
     height: 24px;
@@ -215,6 +214,14 @@ body {
   max-width: 90%;
   width: 340px;
   position: relative;
+}
+
+/* NEW: Styles for the donate button when inside the modal */
+.modal-donate {
+    width: 100%;        /* Full width like other buttons */
+    margin-top: 10px;   /* Spacing */
+    text-align: center;
+    box-sizing: border-box;
 }
 
 /* Instructions Layout */

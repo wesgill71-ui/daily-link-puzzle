@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Daily Link Puzzle</title>
+    <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -35,7 +36,10 @@
         </main>
 
         <footer class="footer">
-            A daily word connection puzzle
+            <p>A daily word connection puzzle</p>
+            <a href="https://www.buymeacoffee.com/YOUR_USERNAME" target="_blank" class="support-link">
+                ☕ Support the Developer
+            </a>
         </footer>
     </div>
 
@@ -76,7 +80,9 @@
 
                 <div class="example-box">
                     <div class="pair-card" style="margin-bottom: 5px;">
-                        <span>Repeat</span> <span class="link-emoji">🔗</span> <span>Recognize</span>
+                        <span>Repeat</span>
+                        <img src="{{ url_for('static', filename='logo.png') }}" class="link-icon" alt="link">
+                        <span>Recognize</span>
                     </div>
                     <p class="example-text">Answer: <strong>PATTERN</strong></p>
                     <p class="hint-text">Patterns repeat and patterns are recognizable.</p>

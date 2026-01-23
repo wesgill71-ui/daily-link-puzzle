@@ -32,11 +32,12 @@ body {
   flex-direction: column;
 }
 
-/* Header & Help Button */
+/* Header & Icons */
 .header-top-row {
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
+    gap: 15px; /* Spacing between Bulb and Question Mark */
 }
 
 .icon-btn {
@@ -52,11 +53,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
 }
 
 .icon-btn:hover {
     border-color: #fff;
     color: #fff;
+    background-color: #222;
 }
 
 .header h1 {
@@ -198,7 +201,6 @@ body {
     margin-bottom: 15px;
 }
 
-/* NEW: Sub-header for sections like "Example" */
 .instructions-sub-header {
     color: #fff;
     font-weight: bold;

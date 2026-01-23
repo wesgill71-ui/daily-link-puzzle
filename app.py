@@ -2,7 +2,8 @@ from flask import Flask, render_template, jsonify, request, session
 import json
 from datetime import datetime, date, time
 
-START_DATE = datetime.combine(date(2026,1,16), time.min)
+# Set the start date (Naive datetime, assuming midnight)
+START_DATE = datetime.combine(date(2026, 1, 16), time.min)
 
 app = Flask(__name__)
 
@@ -15,7 +16,9 @@ def load_puzzles():
         return json.load(f)
 
 def get_daily_index():
+    # RELIES ON SERVER SYSTEM TIME (Controlled by Railway Variable)
     today = datetime.combine(date.today(), time.min)
+    
     days_since_start = (today - START_DATE).days
     
     if days_since_start < 0:
@@ -47,7 +50,9 @@ def get_puzzle():
         "current_guesses": session.get("guess_count", 0),
         "history": session.get("history", []),
         "solved": session.get("solved", False),
-        "day_index": idx + 1  # <--- ADD THIS LINE (Puzzle #1, #2, etc.)
+        "day_index": idx + 1,
+        # Send Synonyms to Frontend for the Hint Button
+        "synonyms": puzzle.get("synonyms", ["No hint available"])
     })
 
 @app.route("/guess", methods=["POST"])
@@ -77,6 +82,7 @@ def guess():
         return word
 
     answer = puzzle["answer"].lower()
+    # Safely load synonyms
     synonyms = [s.lower() for s in puzzle.get("synonyms", [])]
     
     guess_norm = normalize(guess_text)
@@ -91,7 +97,7 @@ def guess():
         status = "correct"
         advance = True
         session["solved"] = True
-        reveal_answer = puzzle["answer"]  # <--- THIS IS THE FIX (Reveal on win)
+        reveal_answer = puzzle["answer"]
     elif guess_text in synonyms:
         status = "close"
     elif guess_norm == answer_norm:
@@ -124,4 +130,4 @@ def guess():
     })
 
 if __name__ == "__main__":
-    app.run(debug=True, extra_files=['static/styles.css'], port = 5001)
+    app.run(debug=True, extra_files=['static/styles.css'], port=5001)

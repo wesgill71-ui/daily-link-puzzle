@@ -100,6 +100,48 @@ function addFeedbackRow(guessWord, status, answer) {
     guessList.appendChild(row);
 }
 
+// --- NEW HINT LOGIC ---
+function showHint() {
+    let hintText = "No hint available for this puzzle.";
+    
+    // Check if synonyms exist in the fetched data
+    if (puzzleData.synonyms && puzzleData.synonyms.length > 0) {
+        // Pick the first synonym (or randomize if you prefer)
+        hintText = `Synonym: ${puzzleData.synonyms[0]}`;
+    } else if (puzzleData.synonym) {
+        // Fallback for single synonym string
+        hintText = `Synonym: ${puzzleData.synonym}`;
+    }
+
+    // Reuse the Game Modal but hide the Share button
+    const modal = document.getElementById("game-modal");
+    document.getElementById("modal-title").innerText = "Hint";
+    document.getElementById("modal-message").innerText = hintText;
+    
+    // Hide share button for hints
+    document.getElementById("share-btn").classList.add("hidden");
+    
+    modal.classList.remove("hidden");
+    setTimeout(() => modal.classList.add("show"), 10);
+}
+
+// --- MODAL & SHARE LOGIC ---
+function showModal(title, message, showShare = true) {
+    const modal = document.getElementById("game-modal");
+    document.getElementById("modal-title").innerText = title;
+    document.getElementById("modal-message").innerText = message;
+    
+    const shareBtn = document.getElementById("share-btn");
+    if (showShare) {
+        shareBtn.classList.remove("hidden");
+    } else {
+        shareBtn.classList.add("hidden");
+    }
+    
+    modal.classList.remove("hidden");
+    setTimeout(() => modal.classList.add("show"), 10);
+}
+
 async function handleShare(btnElement) {
     const history = puzzleData.history || [];
     const dayIndex = puzzleData.day_index || 1;
@@ -169,9 +211,9 @@ async function submitGuess() {
         if (data.status === "correct") {
             solved = true;
             renderBoard();
-            showModal("Congratulations!", `The answer was ${data.answer}.`);
+            showModal("Congratulations!", `The answer was ${data.answer}.`, true);
         } else {
-            showModal("Game Over", `The answer was ${data.answer}. Try again tomorrow!`);
+            showModal("Game Over", `The answer was ${data.answer}. Try again tomorrow!`, true);
         }
     } else {
         if (revealedCount < puzzleData.pairs.length) {
@@ -184,31 +226,28 @@ async function submitGuess() {
     if (!solved) input.focus();
 }
 
-function showModal(title, message) {
-    const modal = document.getElementById("game-modal");
-    document.getElementById("modal-title").innerText = title;
-    document.getElementById("modal-message").innerText = message;
-    
-    modal.classList.remove("hidden");
-    setTimeout(() => modal.classList.add("show"), 10);
-}
-
 function disableInput() {
     document.getElementById("submit-btn").disabled = true;
     document.getElementById("guess-input").disabled = true;
 }
 
+// Event Listeners
 document.getElementById("submit-btn").addEventListener("click", submitGuess);
 document.getElementById("guess-input").addEventListener("keydown", (e) => {
     if (e.key === "Enter") submitGuess();
 });
 
+// Modal Close Button
 document.getElementById("close-modal-btn").addEventListener("click", () => {
     const modal = document.getElementById("game-modal");
     modal.classList.remove("show");
     setTimeout(() => modal.classList.add("hidden"), 300);
 });
 
+// Hint Button Listener
+document.getElementById("hint-btn").addEventListener("click", showHint);
+
+// Instructions Listeners
 document.getElementById("help-btn").addEventListener("click", () => {
     document.getElementById("instructions-modal").classList.add("show");
 });

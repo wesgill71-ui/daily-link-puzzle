@@ -66,19 +66,15 @@ function renderBoard() {
     });
 }
 
-// --- UPDATED FEEDBACK FUNCTION ---
 function addFeedbackRow(guessWord, status, answer) {
     const guessList = document.getElementById("guess-list");
     
-    // Create the row container
     const row = document.createElement("div");
-    row.className = "guess-row"; // Applies the Flexbox style
+    row.className = "guess-row";
 
-    // Create the colored box
     const box = document.createElement("span");
-    box.className = "color-box"; // Base class for shape
+    box.className = "color-box";
 
-    // Create the text span
     const text = document.createElement("span");
 
     if (status === "correct") {
@@ -86,7 +82,7 @@ function addFeedbackRow(guessWord, status, answer) {
         text.innerText = `${guessWord} — Correct!`;
         text.style.color = "#4ade80";
     } else if (status === "fail") {
-        box.classList.add("red"); // Uses the new red box style
+        box.classList.add("red");
         text.innerText = "Out of guesses";
         text.style.color = "#ff4d4d";
     } else if (status === "close") {
@@ -96,14 +92,11 @@ function addFeedbackRow(guessWord, status, answer) {
     } else {
         box.classList.add("white");
         text.innerText = guessWord;
-        text.style.color = "#b5b5b8"; // Default grey text
+        text.style.color = "#b5b5b8";
     }
 
-    // Append box and text to the row
     row.appendChild(box);
     row.appendChild(text);
-
-    // Add to the list
     guessList.appendChild(row);
 }
 

@@ -159,6 +159,40 @@ body {
   color: var(--muted);
 }
 
+/* Stats Styling */
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 10px 0 20px;
+}
+
+.stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+/* New Header Style for Game Over Modal */
+.stats-header {
+    margin: 20px 0 10px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
 /* Footer & Support Button */
 .footer {
   margin-top: auto;
@@ -216,10 +250,9 @@ body {
   position: relative;
 }
 
-/* NEW: Styles for the donate button when inside the modal */
 .modal-donate {
-    width: 100%;        /* Full width like other buttons */
-    margin-top: 10px;   /* Spacing */
+    width: 100%;
+    margin-top: 10px;
     text-align: center;
     box-sizing: border-box;
 }

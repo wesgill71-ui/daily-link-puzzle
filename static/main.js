@@ -3,12 +3,28 @@ let revealedCount = 1;
 let guessCount = 0;
 let solved = false;
 
+// Default Stats Object
+let userStats = {
+    gamesPlayed: 0,
+    gamesWon: 0,
+    currentStreak: 0,
+    maxStreak: 0,
+    lastPlayedIndex: -1
+};
+
 async function loadPuzzle() {
+    loadStats();
+
     const res = await fetch("/puzzle");
     puzzleData = await res.json();
 
-    guessCount = puzzleData.current_guesses || 0;
-    solved = puzzleData.solved || false;
+    restoreGameState();
+
+    guessCount = puzzleData.history ? puzzleData.history.length : 0;
+    
+    if (puzzleData.solved) {
+        solved = true;
+    }
     
     if (!puzzleData.history) puzzleData.history = [];
 
@@ -45,6 +61,89 @@ function checkFirstVisit() {
         localStorage.setItem('dailyLinkVisited', 'true');
     }
 }
+
+// --- GAME STATE PERSISTENCE ---
+function saveGameState() {
+    const state = {
+        day_index: puzzleData.day_index,
+        history: puzzleData.history,
+        solved: solved
+    };
+    localStorage.setItem('dailyLinkProgress', JSON.stringify(state));
+}
+
+function restoreGameState() {
+    const savedJSON = localStorage.getItem('dailyLinkProgress');
+    if (!savedJSON) return;
+
+    try {
+        const saved = JSON.parse(savedJSON);
+        if (saved.day_index === puzzleData.day_index) {
+            puzzleData.history = saved.history;
+            puzzleData.solved = saved.solved;
+            solved = saved.solved;
+        }
+    } catch (e) {
+        console.error("Error parsing saved game state", e);
+    }
+}
+
+// --- STATS LOGIC ---
+function loadStats() {
+    const stored = localStorage.getItem('dailyLinkStats');
+    if (stored) {
+        userStats = JSON.parse(stored);
+    }
+}
+
+function saveStats() {
+    localStorage.setItem('dailyLinkStats', JSON.stringify(userStats));
+}
+
+function updateStats(isWin) {
+    if (userStats.lastPlayedIndex === puzzleData.day_index) {
+        return;
+    }
+
+    userStats.gamesPlayed++;
+    userStats.lastPlayedIndex = puzzleData.day_index;
+
+    if (isWin) {
+        userStats.gamesWon++;
+        userStats.currentStreak++;
+        if (userStats.currentStreak > userStats.maxStreak) {
+            userStats.maxStreak = userStats.currentStreak;
+        }
+    } else {
+        userStats.currentStreak = 0;
+    }
+    saveStats();
+}
+
+// Updated to populate BOTH the Header Modal and the Game Over Modal
+function populateStatsModal() {
+    let winPct = 0;
+    if (userStats.gamesPlayed > 0) {
+        winPct = Math.round((userStats.gamesWon / userStats.gamesPlayed) * 100);
+    }
+
+    // 1. Update Header Stats Modal
+    document.getElementById('stat-played').innerText = userStats.gamesPlayed;
+    document.getElementById('stat-win-pct').innerText = winPct;
+    document.getElementById('stat-streak').innerText = userStats.currentStreak;
+    document.getElementById('stat-max-streak').innerText = userStats.maxStreak;
+
+    // 2. Update Game Over Modal Stats
+    // Check if element exists first (safety check)
+    if(document.getElementById('gm-stat-played')) {
+        document.getElementById('gm-stat-played').innerText = userStats.gamesPlayed;
+        document.getElementById('gm-stat-win-pct').innerText = winPct;
+        document.getElementById('gm-stat-streak').innerText = userStats.currentStreak;
+        document.getElementById('gm-stat-max-streak').innerText = userStats.maxStreak;
+    }
+}
+
+// --- RENDER & LOGIC ---
 
 function renderBoard() {
     const board = document.getElementById("puzzle-board");
@@ -115,10 +214,10 @@ function showHint() {
     document.getElementById("modal-title").innerText = "Hint";
     document.getElementById("modal-message").innerText = hintText;
     
-    // Hide BOTH buttons for hints
+    // Hide buttons AND stats for Hints
     document.getElementById("share-btn").classList.add("hidden");
-    const supportBtn = document.getElementById("modal-support-btn");
-    if(supportBtn) supportBtn.classList.add("hidden");
+    document.getElementById("modal-support-btn").classList.add("hidden");
+    document.getElementById("modal-stats-container").classList.add("hidden");
     
     modal.classList.remove("hidden");
     setTimeout(() => modal.classList.add("show"), 10);
@@ -131,15 +230,21 @@ function showModal(title, message, showShare = true) {
     
     const shareBtn = document.getElementById("share-btn");
     const supportBtn = document.getElementById("modal-support-btn");
+    const statsContainer = document.getElementById("modal-stats-container");
 
     if (showShare) {
+        // Game Over or Win: Show everything
         shareBtn.classList.remove("hidden");
-        // Show donate button on Game Over / Win
-        if(supportBtn) supportBtn.classList.remove("hidden");
+        supportBtn.classList.remove("hidden");
+        
+        // Populate and Show Stats
+        populateStatsModal();
+        statsContainer.classList.remove("hidden");
     } else {
+        // Generic/Hint: Hide buttons and stats
         shareBtn.classList.add("hidden");
-        // Hide donate button if not sharing (shouldn't happen here often, but good for safety)
-        if(supportBtn) supportBtn.classList.add("hidden");
+        supportBtn.classList.add("hidden");
+        statsContainer.classList.add("hidden");
     }
     
     modal.classList.remove("hidden");
@@ -205,6 +310,8 @@ async function submitGuess() {
         answer: data.answer
     });
 
+    saveGameState();
+
     addFeedbackRow(guess, data.status, data.answer);
 
     if (data.advance) {
@@ -214,9 +321,13 @@ async function submitGuess() {
 
         if (data.status === "correct") {
             solved = true;
+            saveGameState();
             renderBoard();
+            updateStats(true);
             showModal("Congratulations!", `The answer was ${data.answer}.`, true);
         } else {
+            saveGameState();
+            updateStats(false);
             showModal("Game Over", `The answer was ${data.answer}. Try again tomorrow!`, true);
         }
     } else {
@@ -224,6 +335,7 @@ async function submitGuess() {
             revealedCount++;
             renderBoard();
         }
+        saveGameState();
     }
 
     input.value = "";
@@ -244,6 +356,16 @@ document.getElementById("close-modal-btn").addEventListener("click", () => {
     const modal = document.getElementById("game-modal");
     modal.classList.remove("show");
     setTimeout(() => modal.classList.add("hidden"), 300);
+});
+
+// Stats Button in Header
+document.getElementById("stats-btn").addEventListener("click", () => {
+    populateStatsModal();
+    document.getElementById("stats-modal").classList.add("show");
+});
+
+document.getElementById("close-stats-btn").addEventListener("click", () => {
+    document.getElementById("stats-modal").classList.remove("show");
 });
 
 document.getElementById("hint-btn").addEventListener("click", showHint);

@@ -13,17 +13,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Daily Link Puzzle</title>
-    
     <link rel="icon" href="{{ url_for('static', filename='logo.png') }}" type="image/png">
-    
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="app">
         <header class="header">
             <div class="header-top-row">
-                <button id="hint-btn" class="icon-btn" aria-label="Get Hint">💡</button>
                 <button id="help-btn" class="icon-btn" aria-label="Instructions">?</button>
+                <button id="stats-btn" class="icon-btn" aria-label="Statistics">📊</button>
+                <button id="hint-btn" class="icon-btn" aria-label="Get Hint">💡</button>
             </div>
             
             <h1>The Daily Link Puzzle</h1>
@@ -58,15 +57,66 @@
         <div class="modal-content">
             <h2 id="modal-title"></h2>
             <p id="modal-message"></p>
+            
             <div class="modal-actions">
+                
+                <div id="modal-stats-container" class="hidden">
+                    <h3 class="stats-header">Statistics</h3>
+                    <div class="stats-container">
+                        <div class="stat-box">
+                            <span id="gm-stat-played" class="stat-number">0</span>
+                            <span class="stat-label">Played</span>
+                        </div>
+                        <div class="stat-box">
+                            <span id="gm-stat-win-pct" class="stat-number">0</span>
+                            <span class="stat-label">Win %</span>
+                        </div>
+                        <div class="stat-box">
+                            <span id="gm-stat-streak" class="stat-number">0</span>
+                            <span class="stat-label">Streak</span>
+                        </div>
+                        <div class="stat-box">
+                            <span id="gm-stat-max-streak" class="stat-number">0</span>
+                            <span class="stat-label">Max Streak</span>
+                        </div>
+                    </div>
+                </div>
+                
                 <button id="share-btn" class="share-btn">Share Result</button>
                 
                 <a id="modal-support-btn" href="https://www.paypal.com/ncp/payment/2T2LAVUXJNMMU" target="_blank" class="support-link modal-donate">
                     ❤️ Donate via PayPal
                 </a>
 
+                
+
                 <button id="close-modal-btn" class="secondary-btn">Close</button>
             </div>
+        </div>
+    </div>
+
+    <div id="stats-modal" class="modal">
+        <div class="modal-content">
+            <h2>Statistics</h2>
+            <div class="stats-container">
+                <div class="stat-box">
+                    <span id="stat-played" class="stat-number">0</span>
+                    <span class="stat-label">Played</span>
+                </div>
+                <div class="stat-box">
+                    <span id="stat-win-pct" class="stat-number">0</span>
+                    <span class="stat-label">Win %</span>
+                </div>
+                <div class="stat-box">
+                    <span id="stat-streak" class="stat-number">0</span>
+                    <span class="stat-label">Streak</span>
+                </div>
+                <div class="stat-box">
+                    <span id="stat-max-streak" class="stat-number">0</span>
+                    <span class="stat-label">Max Streak</span>
+                </div>
+            </div>
+            <button id="close-stats-btn" class="secondary-btn">Close</button>
         </div>
     </div>
 

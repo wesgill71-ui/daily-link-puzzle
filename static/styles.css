@@ -36,8 +36,27 @@ body {
 .header-top-row {
     display: flex;
     justify-content: center;
+    align-items: center;
     margin-bottom: 10px;
     gap: 15px;
+}
+
+/* Streak Badge Styling */
+.streak-badge {
+    display: flex;
+    align-items: top;
+    gap: 0px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+    margin-right: 5px;
+}
+
+/* UPDATED: Custom Fire PNG Icon */
+.streak-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain; /* Ensures the PNG scales correctly */
 }
 
 .icon-btn {
@@ -184,7 +203,6 @@ body {
     margin-top: 4px;
 }
 
-/* New Header Style for Game Over Modal */
 .stats-header {
     margin: 20px 0 10px;
     color: #fff;

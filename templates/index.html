@@ -20,6 +20,11 @@
     <div class="app">
         <header class="header">
             <div class="header-top-row">
+                <div id="header-streak-container" class="streak-badge hidden">
+                    <img src="{{ url_for('static', filename='fire.png') }}" class="streak-icon" alt="Streak">
+                    <span id="header-streak-val">0</span>
+                </div>
+
                 <button id="help-btn" class="icon-btn" aria-label="Instructions">?</button>
                 <button id="stats-btn" class="icon-btn" aria-label="Statistics">📊</button>
                 <button id="hint-btn" class="icon-btn" aria-label="Get Hint">💡</button>
@@ -59,7 +64,6 @@
             <p id="modal-message"></p>
             
             <div class="modal-actions">
-                
                 <div id="modal-stats-container" class="hidden">
                     <h3 class="stats-header">Statistics</h3>
                     <div class="stats-container">
@@ -73,22 +77,20 @@
                         </div>
                         <div class="stat-box">
                             <span id="gm-stat-streak" class="stat-number">0</span>
-                            <span class="stat-label">Streak</span>
+                            <span class="stat-label">Win Streak</span>
                         </div>
                         <div class="stat-box">
                             <span id="gm-stat-max-streak" class="stat-number">0</span>
-                            <span class="stat-label">Max Streak</span>
+                            <span class="stat-label">Max Win Streak</span>
                         </div>
                     </div>
                 </div>
-                
+
                 <button id="share-btn" class="share-btn">Share Result</button>
                 
                 <a id="modal-support-btn" href="https://www.paypal.com/ncp/payment/2T2LAVUXJNMMU" target="_blank" class="support-link modal-donate">
                     ❤️ Donate via PayPal
                 </a>
-
-                
 
                 <button id="close-modal-btn" class="secondary-btn">Close</button>
             </div>
@@ -109,11 +111,11 @@
                 </div>
                 <div class="stat-box">
                     <span id="stat-streak" class="stat-number">0</span>
-                    <span class="stat-label">Streak</span>
+                    <span class="stat-label">Win Streak</span>
                 </div>
                 <div class="stat-box">
                     <span id="stat-max-streak" class="stat-number">0</span>
-                    <span class="stat-label">Max Streak</span>
+                    <span class="stat-label">Max Win Streak</span>
                 </div>
             </div>
             <button id="close-stats-btn" class="secondary-btn">Close</button>

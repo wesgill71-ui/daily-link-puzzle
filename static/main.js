@@ -13,13 +13,22 @@ let userStats = {
 };
 
 async function loadPuzzle() {
+    // 1. Load User Stats
     loadStats();
 
     const res = await fetch("/puzzle");
     puzzleData = await res.json();
 
+    // 2. Validate Streak (Reset if they skipped a day)
+    validateStreak();
+
+    // 3. Restore Game Progress (if they refreshed or came back)
     restoreGameState();
 
+    // 4. Update UI (Show Streak in Header)
+    updateStatsUI();
+
+    // 5. Initialize Game Variables
     guessCount = puzzleData.history ? puzzleData.history.length : 0;
     
     if (puzzleData.solved) {
@@ -33,7 +42,7 @@ async function loadPuzzle() {
         revealedCount = puzzleData.pairs.length;
     }
 
-    const feedback = document.getElementById("feedback");
+    // 6. Render History
     const guessList = document.getElementById("guess-list");
     guessList.innerHTML = "";
     
@@ -44,6 +53,7 @@ async function loadPuzzle() {
     renderBoard();
     checkFirstVisit();
 
+    // 7. Check Game Over State
     if (solved || (guessCount >= puzzleData.max_guesses && !solved)) {
         disableInput();
         const pBtn = document.getElementById("persistent-share-btn");
@@ -78,6 +88,7 @@ function restoreGameState() {
 
     try {
         const saved = JSON.parse(savedJSON);
+        // Only restore if it matches TODAY'S puzzle
         if (saved.day_index === puzzleData.day_index) {
             puzzleData.history = saved.history;
             puzzleData.solved = saved.solved;
@@ -100,7 +111,22 @@ function saveStats() {
     localStorage.setItem('dailyLinkStats', JSON.stringify(userStats));
 }
 
+function validateStreak() {
+    if (userStats.lastPlayedIndex === -1) return;
+
+    const currentDay = puzzleData.day_index;
+    const lastPlayed = userStats.lastPlayedIndex;
+    const gap = currentDay - lastPlayed;
+
+    // If gap > 1, they missed a day. Reset streak.
+    if (gap > 1) {
+        userStats.currentStreak = 0;
+        saveStats();
+    }
+}
+
 function updateStats(isWin) {
+    // If we already played today's index, don't double count
     if (userStats.lastPlayedIndex === puzzleData.day_index) {
         return;
     }
@@ -118,23 +144,32 @@ function updateStats(isWin) {
         userStats.currentStreak = 0;
     }
     saveStats();
+    updateStatsUI();
 }
 
-// Updated to populate BOTH the Header Modal and the Game Over Modal
-function populateStatsModal() {
+function updateStatsUI() {
     let winPct = 0;
     if (userStats.gamesPlayed > 0) {
         winPct = Math.round((userStats.gamesWon / userStats.gamesPlayed) * 100);
     }
 
-    // 1. Update Header Stats Modal
+    // 1. Update Header Streak Display
+    const headerStreak = document.getElementById("header-streak-val");
+    const headerContainer = document.getElementById("header-streak-container");
+    
+    if (headerStreak && headerContainer) {
+        headerStreak.innerText = userStats.currentStreak;
+        // Always show the streak container
+        headerContainer.classList.remove("hidden");
+    }
+
+    // 2. Update Header Stats Modal
     document.getElementById('stat-played').innerText = userStats.gamesPlayed;
     document.getElementById('stat-win-pct').innerText = winPct;
     document.getElementById('stat-streak').innerText = userStats.currentStreak;
     document.getElementById('stat-max-streak').innerText = userStats.maxStreak;
 
-    // 2. Update Game Over Modal Stats
-    // Check if element exists first (safety check)
+    // 3. Update Game Over Modal Stats
     if(document.getElementById('gm-stat-played')) {
         document.getElementById('gm-stat-played').innerText = userStats.gamesPlayed;
         document.getElementById('gm-stat-win-pct').innerText = winPct;
@@ -216,8 +251,11 @@ function showHint() {
     
     // Hide buttons AND stats for Hints
     document.getElementById("share-btn").classList.add("hidden");
-    document.getElementById("modal-support-btn").classList.add("hidden");
-    document.getElementById("modal-stats-container").classList.add("hidden");
+    const supportBtn = document.getElementById("modal-support-btn");
+    if(supportBtn) supportBtn.classList.add("hidden");
+    
+    const statsContainer = document.getElementById("modal-stats-container");
+    if(statsContainer) statsContainer.classList.add("hidden");
     
     modal.classList.remove("hidden");
     setTimeout(() => modal.classList.add("show"), 10);
@@ -238,7 +276,7 @@ function showModal(title, message, showShare = true) {
         supportBtn.classList.remove("hidden");
         
         // Populate and Show Stats
-        populateStatsModal();
+        updateStatsUI();
         statsContainer.classList.remove("hidden");
     } else {
         // Generic/Hint: Hide buttons and stats
@@ -310,6 +348,7 @@ async function submitGuess() {
         answer: data.answer
     });
 
+    // Save progress immediately after guess
     saveGameState();
 
     addFeedbackRow(guess, data.status, data.answer);
@@ -323,11 +362,11 @@ async function submitGuess() {
             solved = true;
             saveGameState();
             renderBoard();
-            updateStats(true);
+            updateStats(true); // Record Win
             showModal("Congratulations!", `The answer was ${data.answer}.`, true);
         } else {
             saveGameState();
-            updateStats(false);
+            updateStats(false); // Record Loss
             showModal("Game Over", `The answer was ${data.answer}. Try again tomorrow!`, true);
         }
     } else {
@@ -360,7 +399,7 @@ document.getElementById("close-modal-btn").addEventListener("click", () => {
 
 // Stats Button in Header
 document.getElementById("stats-btn").addEventListener("click", () => {
-    populateStatsModal();
+    updateStatsUI();
     document.getElementById("stats-modal").classList.add("show");
 });
 

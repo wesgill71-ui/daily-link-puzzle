@@ -55,8 +55,63 @@
     "synonyms": ["Recollection", "Remembrance", "Retention"]
   },
   {
+    "answer": "CHARGE",
+    "pairs": [
+      ["Positive", "Negative"],
+      ["Guilty", "Innocent"],
+      ["Attack", "Retreat"],
+      ["Credit", "Debit"],
+      ["Battery", "Power"]
+    ],
+    "synonyms": ["Accusation", "Fee", "Rush"]
+  },
+  {
+    "answer": "TRACK",
+    "pairs": [
+      ["Song", "Album"],
+      ["Follow", "Hunt"],
+      ["Train", "Rail"],
+      ["Race", "Field"],
+      ["Path", "Print"]
+    ],
+    "synonyms": ["Trace", "Path", "Song"]
+  },
+  {
+    "answer": "MATCH",
+    "pairs": [
+      ["Fire", "Stick"],
+      ["Winner", "Loser"],
+      ["Pair", "Twin"],
+      ["Same", "Different"],
+      ["Sport", "Game"]
+    ],
+    "synonyms": ["Contest", "Equal", "Game"]
+  },
+  {
+    "answer": "RING",
+    "pairs": [
+      ["Diamond", "Gold"],
+      ["Bell", "Door"],
+      ["Boxer", "Fight"],
+      ["Spy", "Smuggle"],
+      ["Circle", "Loop"]
+    ],
+    "synonyms": ["Band", "Sound", "Arena"]
+  },
+  {
+    "answer": "CODE",
+    "pairs": [
+      ["Dress", "Conduct"],
+      ["Zip", "Area"],
+      ["Morse", "Bar"],
+      ["Source", "Binary"],
+      ["Crack", "Write"]
+    ],
+    "synonyms": ["Cipher", "Program", "Protocol"]
+  },
+  {
     "answer": "RISK",
-    "pairs": [["Chance","Loss"],["Safe","Danger"],["Bet","Outcome"],["Uncertain","Reward"],["Fear","Gain"]],
+    "pairs": [["Take","Avoid"],["Reward","Consequence"],["Moral","Financial"],["Systemic","Operational"],["Factor","Assessment"]],
     "synonyms": ["Hazard", "Gamble", "Peril"]
   },
   {

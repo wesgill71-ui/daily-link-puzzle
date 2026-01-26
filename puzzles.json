@@ -50,13 +50,8 @@
     "synonyms": ["Concentration", "Center", "Spotlight"]
   },
   {
-    "answer": "SPEED",
-    "pairs": [["Fast","Slow"],["Race","Pace"],["Time","Distance"],["Quick","Delay"],["Velocity","Motion"]],
-    "synonyms": ["Velocity", "Pace", "Celerity"]
-  },
-  {
     "answer": "MEMORY",
-    "pairs": [["Recall","Forget"],["Store","Retrieve"],["Past","Present"],["Brain","Mind"],["Learn","Remember"]],
+    "pairs": [["Store","Retrieve"],["Read","Write"],["Vivid","Faded"],["Photographic","Selective"], ["Short-term","Long-term"]],
     "synonyms": ["Recollection", "Remembrance", "Retention"]
   },
   {

@@ -10,27 +10,19 @@ let userStats = {
     currentStreak: 0,
     maxStreak: 0,
     lastPlayedIndex: -1,
-    // Index 0-5 = 1-6 guesses. Index 6 = Failed (X)
     guessDistribution: [0, 0, 0, 0, 0, 0, 0]
 };
 
 async function loadPuzzle() {
-    // 1. Load User Stats
     loadStats();
 
     const res = await fetch("/puzzle");
     puzzleData = await res.json();
 
-    // 2. Validate Streak (Reset if they skipped a day)
     validateStreak();
-
-    // 3. Restore Game Progress (if they refreshed or came back)
     restoreGameState();
-
-    // 4. Update UI (Show Streak in Header)
     updateStatsUI();
 
-    // 5. Initialize Game Variables
     guessCount = puzzleData.history ? puzzleData.history.length : 0;
     
     if (puzzleData.solved) {
@@ -38,16 +30,17 @@ async function loadPuzzle() {
     }
     
     if (!puzzleData.history) puzzleData.history = [];
+    if (!puzzleData.extra_revealed) puzzleData.extra_revealed = []; // Ensure array exists
 
+    // Calculate sequential reveals
     revealedCount = guessCount + 1;
     if (revealedCount > puzzleData.pairs.length) {
         revealedCount = puzzleData.pairs.length;
     }
 
-    // 6. Render History
+    // Render History
     const guessList = document.getElementById("guess-list");
     guessList.innerHTML = "";
-    
     puzzleData.history.forEach(item => {
         addFeedbackRow(item.guess, item.status, item.answer);
     });
@@ -55,7 +48,6 @@ async function loadPuzzle() {
     renderBoard();
     checkFirstVisit();
 
-    // 7. Check Game Over State
     if (solved || (guessCount >= puzzleData.max_guesses && !solved)) {
         disableInput();
         const pBtn = document.getElementById("persistent-share-btn");
@@ -79,7 +71,8 @@ function saveGameState() {
     const state = {
         day_index: puzzleData.day_index,
         history: puzzleData.history,
-        solved: solved
+        solved: solved,
+        extra_revealed: puzzleData.extra_revealed // Save this too
     };
     localStorage.setItem('dailyLinkProgress', JSON.stringify(state));
 }
@@ -90,10 +83,11 @@ function restoreGameState() {
 
     try {
         const saved = JSON.parse(savedJSON);
-        // Only restore if it matches TODAY'S puzzle
         if (saved.day_index === puzzleData.day_index) {
             puzzleData.history = saved.history;
             puzzleData.solved = saved.solved;
+            // Restore extra reveals if they exist
+            if (saved.extra_revealed) puzzleData.extra_revealed = saved.extra_revealed;
             solved = saved.solved;
         }
     } catch (e) {
@@ -107,13 +101,9 @@ function loadStats() {
     if (stored) {
         const parsed = JSON.parse(stored);
         userStats = { ...userStats, ...parsed };
-        
-        // Safety: ensure distribution exists and is array
         if (!userStats.guessDistribution || !Array.isArray(userStats.guessDistribution)) {
             userStats.guessDistribution = [0, 0, 0, 0, 0, 0, 0];
         }
-
-        // MIGRATION: If user has old version (length 6), add the 7th slot for Fails
         if (userStats.guessDistribution.length === 6) {
             userStats.guessDistribution.push(0);
         }
@@ -126,12 +116,9 @@ function saveStats() {
 
 function validateStreak() {
     if (userStats.lastPlayedIndex === -1) return;
-
     const currentDay = puzzleData.day_index;
     const lastPlayed = userStats.lastPlayedIndex;
     const gap = currentDay - lastPlayed;
-
-    // If gap > 1, they missed a day. Reset streak.
     if (gap > 1) {
         userStats.currentStreak = 0;
         saveStats();
@@ -139,10 +126,7 @@ function validateStreak() {
 }
 
 function updateStats(isWin) {
-    // If we already played today's index, don't double count
-    if (userStats.lastPlayedIndex === puzzleData.day_index) {
-        return;
-    }
+    if (userStats.lastPlayedIndex === puzzleData.day_index) return;
 
     userStats.gamesPlayed++;
     userStats.lastPlayedIndex = puzzleData.day_index;
@@ -153,20 +137,11 @@ function updateStats(isWin) {
         if (userStats.currentStreak > userStats.maxStreak) {
             userStats.maxStreak = userStats.currentStreak;
         }
-        
-        // Win Distribution (Index 0-5)
         const distIndex = Math.min(guessCount, 6) - 1;
-        if (distIndex >= 0) {
-            userStats.guessDistribution[distIndex]++;
-        }
-
+        if (distIndex >= 0) userStats.guessDistribution[distIndex]++;
     } else {
         userStats.currentStreak = 0;
-        // Fail Distribution (Index 6)
-        // Ensure the array has enough slots (handled in loadStats, but safe to check)
-        if (userStats.guessDistribution.length > 6) {
-            userStats.guessDistribution[6]++;
-        }
+        if (userStats.guessDistribution.length > 6) userStats.guessDistribution[6]++;
     }
     saveStats();
     updateStatsUI();
@@ -175,35 +150,23 @@ function updateStats(isWin) {
 function renderDistribution(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    
     container.innerHTML = "";
     
-    // Find max value to normalize bar widths
     const maxVal = Math.max(...userStats.guessDistribution, 1);
 
-    // We expect 7 items now: 1, 2, 3, 4, 5, 6, X
     userStats.guessDistribution.forEach((count, index) => {
         const row = document.createElement("div");
         row.className = "dist-row";
-
-        // Logic to determine label (1-6 or X)
         const isFailRow = (index === 6);
         const label = isFailRow ? "X" : (index + 1);
 
-        // Highlight logic
-        // If solved: highlight the row matching guessCount
-        // If NOT solved (and game over): highlight the X row
         let isToday = false;
         if (solved) {
             isToday = (guessCount === index + 1);
         } else {
-            // Check if game is over (failed)
-            if (guessCount >= puzzleData.max_guesses && isFailRow) {
-                isToday = true;
-            }
+            if (guessCount >= puzzleData.max_guesses && isFailRow) isToday = true;
         }
         
-        // Calculate percentage width (minimum 7% so 0 isn't invisible)
         const widthPct = Math.max(7, (count / maxVal) * 100);
 
         row.innerHTML = `
@@ -224,29 +187,24 @@ function updateStatsUI() {
         winPct = Math.round((userStats.gamesWon / userStats.gamesPlayed) * 100);
     }
 
-    // 1. Update Header Streak Display
     const headerStreak = document.getElementById("header-streak-val");
     const headerContainer = document.getElementById("header-streak-container");
-    
     if (headerStreak && headerContainer) {
         headerStreak.innerText = userStats.currentStreak;
         headerContainer.classList.remove("hidden");
     }
 
-    // Helper to safely set text
     const setText = (id, val) => {
         const el = document.getElementById(id);
         if(el) el.innerText = val;
     };
 
-    // 2. Update Header Stats Modal
     setText('stat-played', userStats.gamesPlayed);
     setText('stat-win-pct', winPct);
     setText('stat-streak', userStats.currentStreak);
     setText('stat-max-streak', userStats.maxStreak);
     renderDistribution("stats-distribution");
 
-    // 3. Update Game Over Modal Stats
     if(document.getElementById('gm-stat-played')) {
         setText('gm-stat-played', userStats.gamesPlayed);
         setText('gm-stat-win-pct', winPct);
@@ -268,10 +226,22 @@ function renderBoard() {
 
         const linkIcon = `<img src="/static/logo.png" class="link-icon" alt="link">`;
 
-        if (solved || i < revealedCount) {
+        // CHECK VISIBILITY
+        // 1. Is it the sequentially revealed clue? (i < revealedCount)
+        // 2. Is it specifically revealed by guessing? (puzzleData.extra_revealed.includes(i))
+        // 3. Is the puzzle solved?
+        
+        const isSequentiallyRevealed = i < revealedCount;
+        const isExtraRevealed = puzzleData.extra_revealed && puzzleData.extra_revealed.includes(i);
+
+        if (solved || isSequentiallyRevealed || isExtraRevealed) {
             card.innerHTML = `<span>${pair[0]}</span> ${linkIcon} <span>${pair[1]}</span>`;
+            
             if (solved) card.classList.add("pair-solved");
             else card.classList.add("pair-revealed");
+            
+            // Optional: Add a subtle visual cue if it was revealed by guess vs sequence
+            // For now, we keep it standard as requested.
         } else {
             card.innerHTML = `<span>?</span> ${linkIcon} <span>?</span>`;
             card.classList.add("pair-hidden");
@@ -282,13 +252,10 @@ function renderBoard() {
 
 function addFeedbackRow(guessWord, status, answer) {
     const guessList = document.getElementById("guess-list");
-    
     const row = document.createElement("div");
     row.className = "guess-row";
-
     const box = document.createElement("span");
     box.className = "color-box";
-
     const text = document.createElement("span");
 
     if (status === "correct") {
@@ -316,27 +283,12 @@ function addFeedbackRow(guessWord, status, answer) {
 
 function showHint() {
     let hintText = "No hint available for this puzzle.";
-    
     if (puzzleData.synonyms && puzzleData.synonyms.length > 0) {
         hintText = `Synonym: ${puzzleData.synonyms[0]}`;
     } else if (puzzleData.synonym) {
         hintText = `Synonym: ${puzzleData.synonym}`;
     }
-
-    const modal = document.getElementById("game-modal");
-    document.getElementById("modal-title").innerText = "Hint";
-    document.getElementById("modal-message").innerText = hintText;
-    
-    // Hide buttons AND stats for Hints
-    document.getElementById("share-btn").classList.add("hidden");
-    const supportBtn = document.getElementById("modal-support-btn");
-    if(supportBtn) supportBtn.classList.add("hidden");
-    
-    const statsContainer = document.getElementById("modal-stats-container");
-    if(statsContainer) statsContainer.classList.add("hidden");
-    
-    modal.classList.remove("hidden");
-    setTimeout(() => modal.classList.add("show"), 10);
+    showModal("Hint", hintText, false);
 }
 
 function showModal(title, message, showShare = true) {
@@ -349,15 +301,11 @@ function showModal(title, message, showShare = true) {
     const statsContainer = document.getElementById("modal-stats-container");
 
     if (showShare) {
-        // Game Over or Win: Show everything
         shareBtn.classList.remove("hidden");
         supportBtn.classList.remove("hidden");
-        
-        // Populate and Show Stats
         updateStatsUI();
         statsContainer.classList.remove("hidden");
     } else {
-        // Generic/Hint: Hide buttons and stats
         shareBtn.classList.add("hidden");
         supportBtn.classList.add("hidden");
         statsContainer.classList.add("hidden");
@@ -383,13 +331,8 @@ async function handleShare(btnElement) {
 
     if (navigator.share) {
         try {
-            await navigator.share({
-                title: 'Daily Link Puzzle',
-                text: shareText
-            });
-        } catch (err) {
-            console.log("Share cancelled");
-        }
+            await navigator.share({ title: 'Daily Link Puzzle', text: shareText });
+        } catch (err) { console.log("Share cancelled"); }
     } else {
         navigator.clipboard.writeText(shareText).then(() => {
             const originalText = btnElement.innerText;
@@ -405,7 +348,6 @@ async function handleShare(btnElement) {
 
 async function submitGuess() {
     if (solved) return;
-
     const input = document.getElementById("guess-input");
     const guess = input.value.trim();
     if (!guess) return;
@@ -417,7 +359,12 @@ async function submitGuess() {
     });
 
     const data = await res.json();
-    guessCount++; // Increment global guess count
+    guessCount++;
+
+    // Update the extra revealed list from the backend
+    if (data.extra_revealed) {
+        puzzleData.extra_revealed = data.extra_revealed;
+    }
 
     if (!puzzleData.history) puzzleData.history = [];
     puzzleData.history.push({
@@ -426,9 +373,7 @@ async function submitGuess() {
         answer: data.answer
     });
 
-    // Save progress immediately after guess
     saveGameState();
-
     addFeedbackRow(guess, data.status, data.answer);
 
     if (data.advance) {
@@ -440,18 +385,20 @@ async function submitGuess() {
             solved = true;
             saveGameState();
             renderBoard();
-            updateStats(true); // Record Win & update Distribution
+            updateStats(true);
             showModal("Congratulations!", `The answer was ${data.answer}.`, true);
         } else {
             saveGameState();
-            updateStats(false); // Record Loss
+            updateStats(false);
             showModal("Game Over", `The answer was ${data.answer}. Try again tomorrow!`, true);
         }
     } else {
+        // Sequential reveal logic
         if (revealedCount < puzzleData.pairs.length) {
             revealedCount++;
-            renderBoard();
         }
+        // Whether we increased revealedCount OR found an extra reveal, we must re-render
+        renderBoard();
         saveGameState();
     }
 
@@ -468,36 +415,27 @@ document.getElementById("submit-btn").addEventListener("click", submitGuess);
 document.getElementById("guess-input").addEventListener("keydown", (e) => {
     if (e.key === "Enter") submitGuess();
 });
-
 document.getElementById("close-modal-btn").addEventListener("click", () => {
     const modal = document.getElementById("game-modal");
     modal.classList.remove("show");
     setTimeout(() => modal.classList.add("hidden"), 300);
 });
-
-// Stats Button in Header
 document.getElementById("stats-btn").addEventListener("click", () => {
     updateStatsUI();
     document.getElementById("stats-modal").classList.add("show");
 });
-
 document.getElementById("close-stats-btn").addEventListener("click", () => {
     document.getElementById("stats-modal").classList.remove("show");
 });
-
 document.getElementById("hint-btn").addEventListener("click", showHint);
-
 document.getElementById("help-btn").addEventListener("click", () => {
     document.getElementById("instructions-modal").classList.add("show");
 });
-
 document.getElementById("close-instructions-btn").addEventListener("click", () => {
     document.getElementById("instructions-modal").classList.remove("show");
 });
-
 const modalShareBtn = document.getElementById("share-btn");
 if (modalShareBtn) modalShareBtn.addEventListener("click", (e) => handleShare(e.target));
-
 const persistentShareBtn = document.getElementById("persistent-share-btn");
 if (persistentShareBtn) persistentShareBtn.addEventListener("click", (e) => handleShare(e.target));
 

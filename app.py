@@ -27,6 +27,23 @@ def get_daily_index():
     puzzles = load_puzzles()
     return days_since_start % len(puzzles)
     
+# Normalization Helper (Moved outside so both routes can use it if needed)
+def normalize(word):
+    word = word.lower().strip()
+    if word.endswith("ing"):
+        base = word[:-3]
+        if len(base) >= 2 and base[-1] == base[-2]: base = base[:-1]
+        return base
+    elif word.endswith("e"):
+        return word[:-1]
+    if word.endswith("ed"):
+        base = word[:-2]
+        if base.endswith("i"): base = base[:-1] + "y"
+        return base
+    if word.endswith("es"): return word[:-2]
+    if word.endswith("s"): return word[:-1]
+    return word
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -43,6 +60,7 @@ def get_puzzle():
         session["guess_count"] = 0
         session["history"] = []
         session["solved"] = False
+        session["extra_revealed"] = [] # NEW: Track clues found by guessing
 
     return jsonify({
         "pairs": puzzle["pairs"],
@@ -50,8 +68,8 @@ def get_puzzle():
         "current_guesses": session.get("guess_count", 0),
         "history": session.get("history", []),
         "solved": session.get("solved", False),
+        "extra_revealed": session.get("extra_revealed", []), # NEW: Send to frontend
         "day_index": idx + 1,
-        # Send Synonyms to Frontend for the Hint Button
         "synonyms": puzzle.get("synonyms", ["No hint available"])
     })
 
@@ -64,23 +82,6 @@ def guess():
     idx = get_daily_index()
     puzzle = puzzles[idx]
 
-    # Normalization Logic
-    def normalize(word):
-        word = word.lower().strip()
-        if word.endswith("ing"):
-            base = word[:-3]
-            if len(base) >= 2 and base[-1] == base[-2]: base = base[:-1]
-            return base
-        elif word.endswith("e"):
-            return word[:-1]
-        if word.endswith("ed"):
-            base = word[:-2]
-            if base.endswith("i"): base = base[:-1] + "y"
-            return base
-        if word.endswith("es"): return word[:-2]
-        if word.endswith("s"): return word[:-1]
-        return word
-
     answer = puzzle["answer"].lower()
     # Safely load synonyms
     synonyms = [s.lower() for s in puzzle.get("synonyms", [])]
@@ -92,7 +93,7 @@ def guess():
     advance = False
     reveal_answer = None
 
-    # 1. Check Logic
+    # 1. Check Main Logic
     if guess_text == answer:
         status = "correct"
         advance = True
@@ -103,7 +104,21 @@ def guess():
     elif guess_norm == answer_norm:
         status = "close"
     
-    # 2. Update Session
+    # 2. NEW: Check if guess is inside any of the pairs
+    extra_revealed = session.get("extra_revealed", [])
+    
+    for i, pair in enumerate(puzzle["pairs"]):
+        # Normalize both words in the pair to check against guess
+        p0_norm = normalize(pair[0])
+        p1_norm = normalize(pair[1])
+        
+        if guess_norm == p0_norm or guess_norm == p1_norm:
+            if i not in extra_revealed:
+                extra_revealed.append(i)
+    
+    session["extra_revealed"] = extra_revealed
+
+    # 3. Update Session
     session["guess_count"] += 1
     
     # Check for game over (loss)
@@ -112,7 +127,7 @@ def guess():
         advance = True
         reveal_answer = puzzle["answer"]
 
-    # 3. Save to History
+    # 4. Save to History
     history_entry = {
         "guess": guess_text,
         "status": status,
@@ -126,7 +141,8 @@ def guess():
     return jsonify({
         "status": status,
         "advance": advance,
-        "answer": reveal_answer
+        "answer": reveal_answer,
+        "extra_revealed": extra_revealed # Return updated list
     })
 
 if __name__ == "__main__":

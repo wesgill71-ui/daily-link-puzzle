@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request, session
 import json
+import os
 from datetime import datetime, date, time
 
 # Set the start date (Naive datetime, assuming midnight)
@@ -10,24 +11,35 @@ app = Flask(__name__)
 app.secret_key = "dev-secret-key"  # required for sessions
 
 MAX_GUESSES = 6
+VALID_WORDS = set()
 
 def load_puzzles():
     with open("puzzles.json") as f:
         return json.load(f)
 
+# NEW: Load valid words into memory
+def load_valid_words():
+    global VALID_WORDS
+    try:
+        # Tries to find words.txt in the same directory
+        with open("words.txt", "r") as f:
+            VALID_WORDS = set(word.strip().lower() for word in f)
+        print(f"Loaded {len(VALID_WORDS)} valid words.")
+    except FileNotFoundError:
+        print("Warning: words.txt not found. Word validation disabled.")
+        VALID_WORDS = set()
+
+# Load words on startup
+load_valid_words()
+
 def get_daily_index():
-    # RELIES ON SERVER SYSTEM TIME (Controlled by Railway Variable)
     today = datetime.combine(date.today(), time.min)
-    
     days_since_start = (today - START_DATE).days
-    
     if days_since_start < 0:
         days_since_start = 0
-    
     puzzles = load_puzzles()
     return days_since_start % len(puzzles)
-    
-# Normalization Helper (Moved outside so both routes can use it if needed)
+
 def normalize(word):
     word = word.lower().strip()
     if word.endswith("ing"):
@@ -54,13 +66,12 @@ def get_puzzle():
     idx = get_daily_index()
     puzzle = puzzles[idx]
 
-    # RESET Logic: New Day
     if session.get("daily_index") != idx:
         session["daily_index"] = idx
         session["guess_count"] = 0
         session["history"] = []
         session["solved"] = False
-        session["extra_revealed"] = [] # NEW: Track clues found by guessing
+        session["extra_revealed"] = []
 
     return jsonify({
         "pairs": puzzle["pairs"],
@@ -68,7 +79,7 @@ def get_puzzle():
         "current_guesses": session.get("guess_count", 0),
         "history": session.get("history", []),
         "solved": session.get("solved", False),
-        "extra_revealed": session.get("extra_revealed", []), # NEW: Send to frontend
+        "extra_revealed": session.get("extra_revealed", []),
         "day_index": idx + 1,
         "synonyms": puzzle.get("synonyms", ["No hint available"])
     })
@@ -83,7 +94,6 @@ def guess():
     puzzle = puzzles[idx]
 
     answer = puzzle["answer"].lower()
-    # Safely load synonyms
     synonyms = [s.lower() for s in puzzle.get("synonyms", [])]
     
     guess_norm = normalize(guess_text)
@@ -92,8 +102,25 @@ def guess():
     status = "wrong"
     advance = False
     reveal_answer = None
+    message = None # To send feedback like "Invalid word"
 
-    # 1. Check Main Logic
+    # 1. Validation Check
+    # We allow the guess if it's the answer, a synonym, OR in the dictionary.
+    is_valid = (
+        len(VALID_WORDS) == 0 or # If file missing, allow everything
+        guess_text in VALID_WORDS or
+        guess_text == answer or
+        guess_text in synonyms
+    )
+
+    if not is_valid:
+        return jsonify({
+            "status": "invalid",
+            "message": "Not a valid word",
+            "advance": False
+        })
+
+    # 2. Main Logic
     if guess_text == answer:
         status = "correct"
         advance = True
@@ -104,11 +131,10 @@ def guess():
     elif guess_norm == answer_norm:
         status = "close"
     
-    # 2. NEW: Check if guess is inside any of the pairs
+    # 3. Check for Extra Reveals (Clues)
     extra_revealed = session.get("extra_revealed", [])
     
     for i, pair in enumerate(puzzle["pairs"]):
-        # Normalize both words in the pair to check against guess
         p0_norm = normalize(pair[0])
         p1_norm = normalize(pair[1])
         
@@ -118,16 +144,15 @@ def guess():
     
     session["extra_revealed"] = extra_revealed
 
-    # 3. Update Session
+    # 4. Update Session & Guess Count
     session["guess_count"] += 1
     
-    # Check for game over (loss)
     if not session["solved"] and session["guess_count"] >= MAX_GUESSES:
         status = "fail"
         advance = True
         reveal_answer = puzzle["answer"]
 
-    # 4. Save to History
+    # 5. Save to History
     history_entry = {
         "guess": guess_text,
         "status": status,
@@ -142,7 +167,7 @@ def guess():
         "status": status,
         "advance": advance,
         "answer": reveal_answer,
-        "extra_revealed": extra_revealed # Return updated list
+        "extra_revealed": extra_revealed
     })
 
 if __name__ == "__main__":

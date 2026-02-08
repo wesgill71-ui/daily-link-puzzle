@@ -29,6 +29,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <div id="toast-msg">Not a valid word</div>
+
     <div class="app">
         <header class="header">
             <div class="header-top-row">
@@ -74,39 +76,20 @@
         <div class="modal-content">
             <h2 id="modal-title"></h2>
             <p id="modal-message"></p>
-            
             <div class="modal-actions">
                 <div id="modal-stats-container" class="hidden">
                     <h3 class="stats-header">Statistics</h3>
                     <div class="stats-container">
-                        <div class="stat-box">
-                            <span id="gm-stat-played" class="stat-number">0</span>
-                            <span class="stat-label">Played</span>
-                        </div>
-                        <div class="stat-box">
-                            <span id="gm-stat-win-pct" class="stat-number">0</span>
-                            <span class="stat-label">Win %</span>
-                        </div>
-                        <div class="stat-box">
-                            <span id="gm-stat-streak" class="stat-number">0</span>
-                            <span class="stat-label">Win Streak</span>
-                        </div>
-                        <div class="stat-box">
-                            <span id="gm-stat-max-streak" class="stat-number">0</span>
-                            <span class="stat-label">Max Win Streak</span>
-                        </div>
+                        <div class="stat-box"><span id="gm-stat-played" class="stat-number">0</span><span class="stat-label">Played</span></div>
+                        <div class="stat-box"><span id="gm-stat-win-pct" class="stat-number">0</span><span class="stat-label">Win %</span></div>
+                        <div class="stat-box"><span id="gm-stat-streak" class="stat-number">0</span><span class="stat-label">Win Streak</span></div>
+                        <div class="stat-box"><span id="gm-stat-max-streak" class="stat-number">0</span><span class="stat-label">Max Win Streak</span></div>
                     </div>
-
                     <h3 class="stats-header">Guess Distribution</h3>
                     <div id="modal-distribution" class="distribution-container"></div>
                 </div>
-
                 <button id="share-btn" class="share-btn">Share Result</button>
-                
-                <a id="modal-support-btn" href="https://www.paypal.com/ncp/payment/2T2LAVUXJNMMU" target="_blank" class="support-link modal-donate">
-                    ❤️ Donate via PayPal
-                </a>
-
+                <a id="modal-support-btn" href="https://www.paypal.com/ncp/payment/2T2LAVUXJNMMU" target="_blank" class="support-link modal-donate">❤️ Donate via PayPal</a>
                 <button id="close-modal-btn" class="secondary-btn">Close</button>
             </div>
         </div>
@@ -116,27 +99,13 @@
         <div class="modal-content">
             <h2>Statistics</h2>
             <div class="stats-container">
-                <div class="stat-box">
-                    <span id="stat-played" class="stat-number">0</span>
-                    <span class="stat-label">Played</span>
-                </div>
-                <div class="stat-box">
-                    <span id="stat-win-pct" class="stat-number">0</span>
-                    <span class="stat-label">Win %</span>
-                </div>
-                <div class="stat-box">
-                    <span id="stat-streak" class="stat-number">0</span>
-                    <span class="stat-label">Win Streak</span>
-                </div>
-                <div class="stat-box">
-                    <span id="stat-max-streak" class="stat-number">0</span>
-                    <span class="stat-label">Max Win Streak</span>
-                </div>
+                <div class="stat-box"><span id="stat-played" class="stat-number">0</span><span class="stat-label">Played</span></div>
+                <div class="stat-box"><span id="stat-win-pct" class="stat-number">0</span><span class="stat-label">Win %</span></div>
+                <div class="stat-box"><span id="stat-streak" class="stat-number">0</span><span class="stat-label">Win Streak</span></div>
+                <div class="stat-box"><span id="stat-max-streak" class="stat-number">0</span><span class="stat-label">Max Win Streak</span></div>
             </div>
-
             <h3 class="stats-header">Guess Distribution</h3>
             <div id="stats-distribution" class="distribution-container"></div>
-
             <button id="close-stats-btn" class="secondary-btn">Close</button>
         </div>
     </div>
@@ -147,34 +116,19 @@
             <div class="instructions-body">
                 <p>Find the single word that links each pair together.</p>
                 <p class="highlight-text">The same word works for each hint!</p>
-                
                 <div class="legend-box">
-                    <div class="legend-row">
-                        <span class="color-box green"></span>
-                        <span><strong>Green:</strong> Correct Answer</span>
-                    </div>
-                    <div class="legend-row">
-                        <span class="color-box orange"></span>
-                        <span><strong>Orange:</strong> Close (Synonym/Tense)</span>
-                    </div>
-                    <div class="legend-row">
-                        <span class="color-box white"></span>
-                        <span><strong>White:</strong> Wrong Answer</span>
-                    </div>
+                    <div class="legend-row"><span class="color-box green"></span><span><strong>Green:</strong> Correct Answer</span></div>
+                    <div class="legend-row"><span class="color-box orange"></span><span><strong>Orange:</strong> Close (Synonym/Tense)</span></div>
+                    <div class="legend-row"><span class="color-box white"></span><span><strong>White:</strong> Wrong Answer</span></div>
                 </div>
-
                 <p class="instructions-sub-header">Example:</p>
-
                 <div class="example-box">
                     <div class="pair-card" style="margin-bottom: 5px;">
-                        <span>Repeat</span>
-                        <img src="{{ url_for('static', filename='logo.png') }}" class="link-icon" alt="link">
-                        <span>Recognize</span>
+                        <span>Repeat</span><img src="{{ url_for('static', filename='logo.png') }}" class="link-icon" alt="link"><span>Recognize</span>
                     </div>
                     <p class="example-text">Answer: <strong>PATTERN</strong></p>
                     <p class="hint-text">Patterns repeat and patterns are recognizable.</p>
                 </div>
-
                 <ul class="instructions-list">
                     <li>One more hint reveals after every guess.</li>
                     <li>Puzzles reset daily at midnight.</li>
@@ -183,7 +137,6 @@
             <button id="close-instructions-btn" class="share-btn" style="background: #fff; color: #000;">Got it!</button>
         </div>
     </div>
-
     <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

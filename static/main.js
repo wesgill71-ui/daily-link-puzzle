@@ -9,7 +9,9 @@ let userStats = {
     gamesWon: 0,
     currentStreak: 0,
     maxStreak: 0,
-    lastPlayedIndex: -1
+    lastPlayedIndex: -1,
+    // Index 0-5 = 1-6 guesses. Index 6 = Failed (X)
+    guessDistribution: [0, 0, 0, 0, 0, 0, 0]
 };
 
 async function loadPuzzle() {
@@ -103,7 +105,18 @@ function restoreGameState() {
 function loadStats() {
     const stored = localStorage.getItem('dailyLinkStats');
     if (stored) {
-        userStats = JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        userStats = { ...userStats, ...parsed };
+        
+        // Safety: ensure distribution exists and is array
+        if (!userStats.guessDistribution || !Array.isArray(userStats.guessDistribution)) {
+            userStats.guessDistribution = [0, 0, 0, 0, 0, 0, 0];
+        }
+
+        // MIGRATION: If user has old version (length 6), add the 7th slot for Fails
+        if (userStats.guessDistribution.length === 6) {
+            userStats.guessDistribution.push(0);
+        }
     }
 }
 
@@ -140,11 +153,69 @@ function updateStats(isWin) {
         if (userStats.currentStreak > userStats.maxStreak) {
             userStats.maxStreak = userStats.currentStreak;
         }
+        
+        // Win Distribution (Index 0-5)
+        const distIndex = Math.min(guessCount, 6) - 1;
+        if (distIndex >= 0) {
+            userStats.guessDistribution[distIndex]++;
+        }
+
     } else {
         userStats.currentStreak = 0;
+        // Fail Distribution (Index 6)
+        // Ensure the array has enough slots (handled in loadStats, but safe to check)
+        if (userStats.guessDistribution.length > 6) {
+            userStats.guessDistribution[6]++;
+        }
     }
     saveStats();
     updateStatsUI();
+}
+
+function renderDistribution(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    container.innerHTML = "";
+    
+    // Find max value to normalize bar widths
+    const maxVal = Math.max(...userStats.guessDistribution, 1);
+
+    // We expect 7 items now: 1, 2, 3, 4, 5, 6, X
+    userStats.guessDistribution.forEach((count, index) => {
+        const row = document.createElement("div");
+        row.className = "dist-row";
+
+        // Logic to determine label (1-6 or X)
+        const isFailRow = (index === 6);
+        const label = isFailRow ? "X" : (index + 1);
+
+        // Highlight logic
+        // If solved: highlight the row matching guessCount
+        // If NOT solved (and game over): highlight the X row
+        let isToday = false;
+        if (solved) {
+            isToday = (guessCount === index + 1);
+        } else {
+            // Check if game is over (failed)
+            if (guessCount >= puzzleData.max_guesses && isFailRow) {
+                isToday = true;
+            }
+        }
+        
+        // Calculate percentage width (minimum 7% so 0 isn't invisible)
+        const widthPct = Math.max(7, (count / maxVal) * 100);
+
+        row.innerHTML = `
+            <div class="dist-label">${label}</div>
+            <div class="dist-bar-container">
+                <div class="dist-bar ${isToday ? (isFailRow ? 'fail' : 'highlight') : ''}" style="width: ${widthPct}%">
+                    ${count}
+                </div>
+            </div>
+        `;
+        container.appendChild(row);
+    });
 }
 
 function updateStatsUI() {
@@ -159,22 +230,29 @@ function updateStatsUI() {
     
     if (headerStreak && headerContainer) {
         headerStreak.innerText = userStats.currentStreak;
-        // Always show the streak container
         headerContainer.classList.remove("hidden");
     }
 
+    // Helper to safely set text
+    const setText = (id, val) => {
+        const el = document.getElementById(id);
+        if(el) el.innerText = val;
+    };
+
     // 2. Update Header Stats Modal
-    document.getElementById('stat-played').innerText = userStats.gamesPlayed;
-    document.getElementById('stat-win-pct').innerText = winPct;
-    document.getElementById('stat-streak').innerText = userStats.currentStreak;
-    document.getElementById('stat-max-streak').innerText = userStats.maxStreak;
+    setText('stat-played', userStats.gamesPlayed);
+    setText('stat-win-pct', winPct);
+    setText('stat-streak', userStats.currentStreak);
+    setText('stat-max-streak', userStats.maxStreak);
+    renderDistribution("stats-distribution");
 
     // 3. Update Game Over Modal Stats
     if(document.getElementById('gm-stat-played')) {
-        document.getElementById('gm-stat-played').innerText = userStats.gamesPlayed;
-        document.getElementById('gm-stat-win-pct').innerText = winPct;
-        document.getElementById('gm-stat-streak').innerText = userStats.currentStreak;
-        document.getElementById('gm-stat-max-streak').innerText = userStats.maxStreak;
+        setText('gm-stat-played', userStats.gamesPlayed);
+        setText('gm-stat-win-pct', winPct);
+        setText('gm-stat-streak', userStats.currentStreak);
+        setText('gm-stat-max-streak', userStats.maxStreak);
+        renderDistribution("modal-distribution");
     }
 }
 
@@ -339,7 +417,7 @@ async function submitGuess() {
     });
 
     const data = await res.json();
-    guessCount++;
+    guessCount++; // Increment global guess count
 
     if (!puzzleData.history) puzzleData.history = [];
     puzzleData.history.push({
@@ -362,7 +440,7 @@ async function submitGuess() {
             solved = true;
             saveGameState();
             renderBoard();
-            updateStats(true); // Record Win
+            updateStats(true); // Record Win & update Distribution
             showModal("Congratulations!", `The answer was ${data.answer}.`, true);
         } else {
             saveGameState();

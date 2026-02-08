@@ -52,11 +52,10 @@ body {
     margin-right: 5px;
 }
 
-/* UPDATED: Custom Fire PNG Icon */
 .streak-icon {
     width: 24px;
     height: 24px;
-    object-fit: contain; /* Ensures the PNG scales correctly */
+    object-fit: contain;
 }
 
 .icon-btn {
@@ -391,3 +390,61 @@ body {
 }
 
 .hidden { display: none !important; }
+
+/* --- NEW: Guess Distribution Graph --- */
+.distribution-container {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dist-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    height: 24px;
+}
+
+.dist-label {
+    width: 15px;
+    text-align: right;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.dist-bar-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.dist-bar {
+    background-color: #3a3a3c;
+    min-width: 24px; /* Ensure 0 fits comfortably */
+    padding: 0 6px;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-radius: 2px;
+    width: 7%; /* Default min width */
+    color: #fff;
+    font-size: 12px;
+    transition: width 0.5s ease-in-out;
+}
+
+.dist-bar.highlight {
+    background-color: var(--green);
+    color: #000;
+}
+
+.dist-bar.fail {
+    background-color: #ff4d4d; /* Red for Failures */
+    color: #fff;
+}
